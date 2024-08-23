@@ -1,6 +1,5 @@
-# finance_tracker
+# finance_tracker for Horra Trading
 
-A new Flutter project.
 
 ## Getting Started
 
