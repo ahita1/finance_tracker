@@ -11,6 +11,8 @@ class FinanceProvider with ChangeNotifier {
   double get totalIncome => _totalIncome;
   double get totalExpenses => _totalExpenses;
 
+  double get balance => _totalIncome - _totalExpenses;
+
   List<Map<String, dynamic>> get incomes => _incomes;
   List<Map<String, dynamic>> get expenses => _expenses;
 
@@ -19,6 +21,14 @@ class FinanceProvider with ChangeNotifier {
     final List<Map<String, dynamic>> incomeData = await db.query('incomes');
     _incomes = incomeData;
     _totalIncome = _incomes.fold(0, (sum, item) => sum + (item['amount'] as double));
+    notifyListeners();
+  }
+
+  Future<void> fetchExpenses() async {
+    final db = await DatabaseHelper().database;
+    final List<Map<String, dynamic>> expenseData = await db.query('expenses');
+    _expenses = expenseData;
+    _totalExpenses = _expenses.fold(0, (sum, item) => sum + (item['amount'] as double));
     notifyListeners();
   }
 
@@ -41,11 +51,13 @@ class FinanceProvider with ChangeNotifier {
     await fetchExpenses(); // Refresh the list after adding
   }
 
-  Future<void> fetchExpenses() async {
-    final db = await DatabaseHelper().database;
-    final List<Map<String, dynamic>> expenseData = await db.query('expenses');
-    _expenses = expenseData;
-    _totalExpenses = _expenses.fold(0, (sum, item) => sum + (item['amount'] as double));
-    notifyListeners();
+  double convertToEur(double amount) {
+    // Conversion logic to EUR, assume a fixed rate for simplicity
+    return amount * 0.85;
+  }
+
+  double convertToGbp(double amount) {
+    // Conversion logic to GBP, assume a fixed rate for simplicity
+    return amount * 0.75;
   }
 }

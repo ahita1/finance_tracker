@@ -7,6 +7,7 @@ import 'providers/finance_provider.dart';
 import 'screens/income_screen.dart';
 import 'screens/expense_screen.dart';
 import 'screens/ExpenseListScreen.dart';
+import 'screens/home_screen.dart';
 
 void main() {
   if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
@@ -31,6 +32,8 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: '/expense', // Set the initial route to the IncomeScreen
         routes: {
+          
+          '/': (context) => HomeScreen(),
           '/income': (context) => IncomeScreen(),
           '/display': (context) => ExpenseListScreen(),
           '/expense': (context) => ExpenseScreen(),

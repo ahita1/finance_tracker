@@ -20,12 +20,13 @@ class DatabaseHelper {
   }
 
   Future<Database> _initDatabase() async {
-    String path = join(await getDatabasesPath(), 'income_database.db');
+    String path = join(await getDatabasesPath(), 'finance_database.db');
     return openDatabase(
       path,
       onCreate: (db, version) {
         return db.execute(
-          'CREATE TABLE incomes(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, amount REAL)',
+          'CREATE TABLE incomes(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, amount REAL);'
+          'CREATE TABLE expenses(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, amount REAL, date TEXT)',
         );
       },
       version: 1,
@@ -35,5 +36,10 @@ class DatabaseHelper {
   Future<int> insertIncome(Map<String, dynamic> income) async {
     Database db = await database;
     return await db.insert('incomes', income);
+  }
+
+  Future<int> insertExpense(Map<String, dynamic> expense) async {
+    Database db = await database;
+    return await db.insert('expenses', expense);
   }
 }
