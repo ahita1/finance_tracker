@@ -12,6 +12,13 @@ class _IncomeScreenState extends State<IncomeScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    // Fetch incomes when the screen is initialized
+    Provider.of<FinanceProvider>(context, listen: false).fetchIncomes();
+  }
+
   void _saveIncome() {
     if (_formKey.currentState!.validate()) {
       String title = _titleController.text;
@@ -88,6 +95,24 @@ class _IncomeScreenState extends State<IncomeScreen> {
                     child: Text('Save Income'),
                   ),
                 ],
+              ),
+            ),
+            SizedBox(height: 20),
+            // Display incomes in a table
+            Expanded(
+              child: Consumer<FinanceProvider>(
+                builder: (context, financeProvider, child) {
+                  return ListView.builder(
+                    itemCount: financeProvider.incomes.length,
+                    itemBuilder: (context, index) {
+                      final income = financeProvider.incomes[index];
+                      return ListTile(
+                        title: Text(income['title']),
+                        trailing: Text('\$${income['amount'].toStringAsFixed(2)}'),
+                      );
+                    },
+                  );
+                },
               ),
             ),
           ],

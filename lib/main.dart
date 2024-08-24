@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        initialRoute: '/display', // Set the initial route to the IncomeScreen
+        initialRoute: '/expense', // Set the initial route to the IncomeScreen
         routes: {
           '/income': (context) => IncomeScreen(),
           '/display': (context) => ExpenseListScreen(),

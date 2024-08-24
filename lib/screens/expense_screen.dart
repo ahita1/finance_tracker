@@ -12,6 +12,13 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    // Fetch expenses when the screen is initialized
+    Provider.of<FinanceProvider>(context, listen: false).fetchExpenses();
+  }
+
   void _saveExpense() {
     if (_formKey.currentState!.validate()) {
       String title = _titleController.text;
@@ -90,6 +97,31 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                   ),
                 ],
               ),
+            ),
+            SizedBox(height: 20),
+            // Displaying expenses in a table
+            Consumer<FinanceProvider>(
+              builder: (context, financeProvider, child) {
+                return Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: DataTable(
+                      columns: [
+                        DataColumn(label: Text('Title')),
+                        DataColumn(label: Text('Amount')),
+                        DataColumn(label: Text('Date')),
+                      ],
+                      rows: financeProvider.expenses.map((expense) {
+                        return DataRow(cells: [
+                          DataCell(Text(expense['title'])),
+                          DataCell(Text(expense['amount'].toStringAsFixed(2))),
+                          DataCell(Text(DateTime.parse(expense['date']).toLocal().toString())),
+                        ]);
+                      }).toList(),
+                    ),
+                  ),
+                );
+              },
             ),
           ],
         ),
