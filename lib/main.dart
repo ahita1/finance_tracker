@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        initialRoute: '/income', // Set the initial route to the IncomeScreen
+        initialRoute: '/', // Set the initial route to the IncomeScreen
         routes: {
           
           '/': (context) => HomeScreen(),
