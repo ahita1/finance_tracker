@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
 import '../models/db_helper.dart';
 
 class FinanceProvider with ChangeNotifier {
