@@ -10,9 +10,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  sqflite: ^2.0.0+4
-  sqflite_common_ffi: ^2.3.3  # Downgraded version
+  # sqflite: ^2.0.0+4
+  # sqflite_common_ffi: ^2.3.3  # Downgraded version
   path_provider: ^2.0.11
+  http: ^1.2.2  # Updated version
   provider: ^6.1.2 # Updated to a compatible version
 
 dev_dependencies:
