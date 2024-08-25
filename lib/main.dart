@@ -28,10 +28,21 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
+          appBarTheme: AppBarTheme(
+            backgroundColor: Colors.blueAccent, // Background color of the AppBar
+            elevation: 4, // Elevation for shadow effect
+            titleTextStyle: TextStyle(
+              color: Colors.white, // Color of the AppBar title
+              fontSize: 20, // Font size of the AppBar title
+              fontWeight: FontWeight.bold, // Font weight of the AppBar title
+            ),
+            iconTheme: IconThemeData(
+              color: Colors.white, // Color of the AppBar icons
+            ),
+          ),
         ),
-        initialRoute: '/', // Set the initial route to the IncomeScreen
+        initialRoute: '/', // Set the initial route to the HomeScreen
         routes: {
-          
           '/': (context) => HomeScreen(),
           '/income': (context) => IncomeScreen(),
           '/expense': (context) => ExpenseScreen(),

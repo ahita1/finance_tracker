@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import '../services/db_helper.dart';
+import '../services/currency_service.dart';
 
 class FinanceProvider with ChangeNotifier {
   double _totalIncome = 0.0;
   double _totalExpenses = 0.0;
   List<Map<String, dynamic>> _incomes = [];
   List<Map<String, dynamic>> _expenses = [];
+
+  final CurrencyService _currencyService = CurrencyService();
 
   double get totalIncome => _totalIncome;
   double get totalExpenses => _totalExpenses;
@@ -50,13 +53,23 @@ class FinanceProvider with ChangeNotifier {
     await fetchExpenses(); // Refresh the list after adding
   }
 
-  double convertToEur(double amount) {
-    // Conversion logic to EUR, assume a fixed rate for simplicity
-    return amount * 0.85;
+  Future<Map<String, double>> getConversionRates() async {
+    return await _currencyService.fetchConversionRates();
   }
 
-  double convertToGbp(double amount) {
-    // Conversion logic to GBP, assume a fixed rate for simplicity
-    return amount * 0.75;
+  Future<Map<String, double>> convertBalanceToCurrencies() async {
+    final conversionRates = await getConversionRates();
+    final balanceInEtb = this.balance; // Assuming the balance is in ETB
+    
+    // Convert ETB to USD
+    double etbToUsdRate = conversionRates['USD'] ?? 1.0; // Get USD rate from conversion rates
+    double balanceInUsd = balanceInEtb / etbToUsdRate; // Convert ETB to USD
+    
+    return {
+      'EUR': _currencyService.convertAmount(balanceInUsd, conversionRates['EUR'] ?? 0.0),
+      'GBP': _currencyService.convertAmount(balanceInUsd, conversionRates['GBP'] ?? 0.0),
+      'USD': balanceInUsd, // USD is the base currency
+      'JPY': _currencyService.convertAmount(balanceInUsd, conversionRates['JPY'] ?? 0.0),
+    };
   }
 }

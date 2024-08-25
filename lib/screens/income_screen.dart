@@ -39,9 +39,6 @@ class _IncomeScreenState extends State<IncomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Add Income'),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -92,7 +89,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _saveIncome,
-                    child: Text('Save Income'),
+                    child: Text('Add Income'),
                   ),
                 ],
               ),

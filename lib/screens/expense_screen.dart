@@ -21,10 +21,11 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
 
   void _saveExpense() {
     if (_formKey.currentState!.validate()) {
-      String title = _titleController.text;
-      double amount = double.tryParse(_amountController.text) ?? 0.0;
-      DateTime enteredDate = DateTime.now();
+      final String title = _titleController.text;
+      final double amount = double.tryParse(_amountController.text) ?? 0.0;
+      final DateTime enteredDate = DateTime.now();
 
+      // Add expense and handle the result
       Provider.of<FinanceProvider>(context, listen: false)
           .addExpense(title, amount, enteredDate)
           .then((_) {
@@ -39,10 +40,13 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context); // Get the current theme
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Add Expense'),
-      ),
+      // appBar: AppBar(
+      //   title: Text('Expense Tracker'),
+      //   backgroundColor: theme.appBarTheme.backgroundColor,
+      // ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -56,48 +60,14 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.redAccent,
+                    color: theme.primaryColor, // Use primary color
                   ),
                 );
               },
             ),
             SizedBox(height: 20),
-            Form(
-              key: _formKey,
-              child: Column(
-                children: <Widget>[
-                  TextFormField(
-                    controller: _titleController,
-                    decoration: InputDecoration(labelText: 'Title'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a title';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: _amountController,
-                    decoration: InputDecoration(labelText: 'Amount'),
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter an amount';
-                      }
-                      if (double.tryParse(value) == null) {
-                        return 'Please enter a valid number';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _saveExpense,
-                    child: Text('Save Expense'),
-                  ),
-                ],
-              ),
-            ),
+            // Expense Form
+            _buildExpenseForm(),
             SizedBox(height: 20),
             // Displaying expenses in a list
             Expanded(
@@ -107,12 +77,27 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                     itemCount: financeProvider.expenses.length,
                     itemBuilder: (context, index) {
                       final expense = financeProvider.expenses[index];
-                      return ListTile(
-                        title: Text(expense['title']),
-                        subtitle: Text(
-                          'Date: ${DateTime.parse(expense['date']).toLocal().toString().split(' ')[0]}',
+                      return Card(
+                        elevation: 4,
+                        margin: EdgeInsets.symmetric(vertical: 8),
+                        child: ListTile(
+                          contentPadding: EdgeInsets.all(16),
+                          title: Text(
+                            expense['title'],
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Text(
+                            'Date: ${DateTime.parse(expense['date']).toLocal().toString().split(' ')[0]}',
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
+                          trailing: Text(
+                            '\$${expense['amount'].toStringAsFixed(2)}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: theme.primaryColor, // Use primary color
+                            ),
+                          ),
                         ),
-                        trailing: Text('\$${expense['amount'].toStringAsFixed(2)}'),
                       );
                     },
                   );
@@ -124,4 +109,68 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
       ),
     );
   }
+Widget _buildExpenseForm() {
+  final theme = Theme.of(context); // Get the current theme
+
+  return Form(
+    key: _formKey,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        TextFormField(
+          controller: _titleController,
+          decoration: InputDecoration(
+            labelText: 'Title',
+            border: OutlineInputBorder(),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blueAccent, width: 2.0), // Use primary color
+            ),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter a title';
+            }
+            return null;
+          },
+        ),
+        SizedBox(height: 16),
+        TextFormField(
+          controller: _amountController,
+          decoration: InputDecoration(
+            labelText: 'Amount',
+            border: OutlineInputBorder(),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blueAccent, width: 2.0), // Use primary color
+            ),
+          ),
+          keyboardType: TextInputType.number,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter an amount';
+            }
+            if (double.tryParse(value) == null) {
+              return 'Please enter a valid number';
+            }
+            return null;
+          },
+        ),
+        SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: _saveExpense,
+          child: Text('Add Expense'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blueAccent, // Use primary color
+            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+            textStyle: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.white, // Set text color to white
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 }
