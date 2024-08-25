@@ -6,7 +6,6 @@ import 'dart:io' show Platform;
 import 'providers/finance_provider.dart';
 import 'screens/income_screen.dart';
 import 'screens/expense_screen.dart';
-import 'screens/ExpenseListScreen.dart';
 import 'screens/home_screen.dart';
 
 void main() {
@@ -35,7 +34,6 @@ class MyApp extends StatelessWidget {
           
           '/': (context) => HomeScreen(),
           '/income': (context) => IncomeScreen(),
-          '/display': (context) => ExpenseListScreen(),
           '/expense': (context) => ExpenseScreen(),
           // '/add_edit': (context) => AddEditItemScreen(),
         },

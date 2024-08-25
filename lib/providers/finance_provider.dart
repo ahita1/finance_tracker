@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/db_helper.dart';
+import '../services/db_helper.dart';
 
 class FinanceProvider with ChangeNotifier {
   double _totalIncome = 0.0;
