@@ -1,4 +1,4 @@
-import 'package:finance_tracker/screens/expense_list_screen.dart';
+import 'package:finance_tracker/screens/expense/expense_list_screen.dart';
 import 'package:finance_tracker/services/db_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -6,9 +6,9 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dart:io' show Platform;
 import 'providers/finance_provider.dart';
-import 'screens/income_screen.dart';
-import 'screens/expense_screen.dart';
-import 'screens/home_screen.dart';
+import 'screens/income/income_screen.dart';
+import 'screens/expense/expense_screen.dart';
+import 'screens/home/home_screen.dart';
 
 
 void main() async {

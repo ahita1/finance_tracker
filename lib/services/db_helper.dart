@@ -19,28 +19,39 @@ class DatabaseHelper {
     return _database!;
   }
 
-  Future<Database> _initDatabase() async {
-    String path = join(await getDatabasesPath(), 'finance_database.db');
-    print('Database path: $path'); // Debug statement
-    final db = await openDatabase(
-      path,
-      onCreate: (db, version) async {
-        await db.execute('CREATE TABLE incomes('
-            'id INTEGER PRIMARY KEY AUTOINCREMENT, '
-            'title TEXT, '
-            'amount REAL, '
-            'date TEXT, '
-            'category TEXT);');
-        await db.execute(
-          'CREATE TABLE expenses(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, amount REAL, date TEXT);',
-        );
-        print('Tables created'); // Debug statement
-      },
-      version: 1,
-    );
-    print('Database initialized'); // Debug statement
-    return db;
-  }
+Future<Database> _initDatabase() async {
+  String path = join(await getDatabasesPath(), 'finance_database.db');
+  print('Database path: $path'); // Debug statement
+  final db = await openDatabase(
+    path,
+    onCreate: (db, version) async {
+      await db.execute('CREATE TABLE incomes('
+          'id INTEGER PRIMARY KEY AUTOINCREMENT, '
+          'title TEXT, '
+          'amount REAL, '
+          'date TEXT, '
+          'category TEXT, '
+          'budget_cycle TEXT);');  // Added budget_cycle
+      await db.execute('CREATE TABLE expenses('
+          'id INTEGER PRIMARY KEY AUTOINCREMENT, '
+          'title TEXT, '
+          'amount REAL, '
+          'date TEXT, '
+          'category TEXT, '
+          'budget_cycle TEXT);');  // Added budget_cycle
+      print('Tables created'); // Debug statement
+    },
+    version: 2, // Update the version number to trigger onUpgrade
+    onUpgrade: (db, oldVersion, newVersion) async {
+      if (oldVersion < 2) {
+        await db.execute('ALTER TABLE incomes ADD COLUMN budget_cycle TEXT;');
+        await db.execute('ALTER TABLE expenses ADD COLUMN budget_cycle TEXT;');
+      }
+    },
+  );
+  print('Database initialized'); // Debug statement
+  return db;
+}
 
   Future<void> deleteDatabase() async {
     String path = join(await getDatabasesPath(), 'finance_database.db');

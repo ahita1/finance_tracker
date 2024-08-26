@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/finance_provider.dart';
+import '../../providers/finance_provider.dart';
 import 'spend_item.dart'; // Import the SpendItem widget
 
 class ExpenseListScreen extends StatefulWidget {

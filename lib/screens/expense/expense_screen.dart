@@ -17,6 +17,13 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   bool _isSubmitting = false;
   bool _showSuccessMessage = false;
 
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _amountController.dispose();
+    super.dispose();
+  }
+
   void _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -45,8 +52,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     });
 
     try {
-      final financeProvider =
-          Provider.of<FinanceProvider>(context, listen: false);
+      final financeProvider = Provider.of<FinanceProvider>(context, listen: false);
       await financeProvider.addExpense(title, amount, date);
 
       setState(() {
@@ -150,8 +156,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               GestureDetector(
                 onTap: () => _selectDate(context),
                 child: Container(
-                  padding:
-                      EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+                  padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(12.0),
@@ -173,8 +178,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               Form(
                 key: _formKey,
                 child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start, // Align text to the left
+                  crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
                   children: [
                     TextFormField(
                       controller: _titleController,
@@ -184,13 +188,11 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.blueAccent, width: 2.0),
+                          borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.grey[300]!, width: 1.0),
+                          borderSide: BorderSide(color: Colors.grey[300]!, width: 1.0),
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                       ),
@@ -213,13 +215,11 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.blueAccent, width: 2.0),
+                          borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.grey[300]!, width: 1.0),
+                          borderSide: BorderSide(color: Colors.grey[300]!, width: 1.0),
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         suffixIcon: Padding(
@@ -273,14 +273,12 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                               : Text(
                                   'ADD EXPENSE',
                                   style: TextStyle(
-                                    color:
-                                        Colors.white, // Set text color to white
+                                    color: Colors.white, // Set text color to white
                                   ),
                                 ),
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(vertical: 15.0),
-                            backgroundColor:
-                                Colors.blueAccent, // Background color
+                            backgroundColor: Colors.blueAccent, // Background color
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12.0),
                             ),

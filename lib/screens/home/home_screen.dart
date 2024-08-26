@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/finance_provider.dart';
+import '../../providers/finance_provider.dart';
 import 'bottom_bar.dart';
-import 'income_screen.dart';
-import 'expense_screen.dart';
+import '../income/income_screen.dart';
+import '../expense/expense_screen.dart';
 
 void main() {
   runApp(
