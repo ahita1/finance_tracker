@@ -13,7 +13,8 @@ class _IncomeListScreenState extends State<IncomeListScreen> {
   @override
   void initState() {
     super.initState();
-    _incomesFuture = Provider.of<FinanceProvider>(context, listen: false).fetchIncomes();
+    _incomesFuture =
+        Provider.of<FinanceProvider>(context, listen: false).fetchIncomes();
   }
 
   @override
@@ -58,7 +59,8 @@ class _IncomeListScreenState extends State<IncomeListScreen> {
                 margin: EdgeInsets.symmetric(vertical: 8.0),
                 child: ListTile(
                   contentPadding: EdgeInsets.all(16.0),
-                  leading: Icon(Icons.monetization_on, color: Colors.blue, size: 40), // Blue icon
+                  leading: Icon(Icons.monetization_on,
+                      color: Colors.blue, size: 40), // Blue icon
                   title: Text(
                     title,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),

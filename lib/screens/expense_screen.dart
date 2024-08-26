@@ -87,7 +87,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.pushReplacementNamed(context, '/'); // Navigate to homepage
+            Navigator.pushReplacementNamed(
+                context, '/'); // Navigate to homepage
           },
         ),
         actions: [
@@ -149,7 +150,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               GestureDetector(
                 onTap: () => _selectDate(context),
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+                  padding:
+                      EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(12.0),
@@ -171,7 +173,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               Form(
                 key: _formKey,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start, // Align text to the left
                   children: [
                     TextFormField(
                       controller: _titleController,
@@ -181,11 +184,13 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
+                          borderSide:
+                              BorderSide(color: Colors.blueAccent, width: 2.0),
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey[300]!, width: 1.0),
+                          borderSide:
+                              BorderSide(color: Colors.grey[300]!, width: 1.0),
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                       ),
@@ -208,11 +213,13 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
+                          borderSide:
+                              BorderSide(color: Colors.blueAccent, width: 2.0),
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey[300]!, width: 1.0),
+                          borderSide:
+                              BorderSide(color: Colors.grey[300]!, width: 1.0),
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         suffixIcon: Padding(
@@ -240,7 +247,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                     SizedBox(height: 20),
                     Text(
                       'Expense Category',
-                      style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 16.0, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 10),
                     Row(
@@ -259,17 +267,20 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                           onPressed: _isSubmitting ? null : _addExpense,
                           child: _isSubmitting
                               ? CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
                                 )
                               : Text(
                                   'ADD EXPENSE',
                                   style: TextStyle(
-                                    color: Colors.white, // Set text color to white
+                                    color:
+                                        Colors.white, // Set text color to white
                                   ),
                                 ),
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(vertical: 15.0),
-                            backgroundColor: Colors.blueAccent, // Background color
+                            backgroundColor:
+                                Colors.blueAccent, // Background color
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12.0),
                             ),

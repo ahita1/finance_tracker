@@ -266,21 +266,23 @@ class _ExpensePageState extends State<ExpensePage> {
   }
 
   Map<String, String> currencySymbols = {
-    'USD': '\$',  // US Dollar
-    'EUR': '€',   // Euro
-    'GBP': '£',   // British Pound
-    'JPY': '¥',   // Japanese Yen
-    'ETB': 'ብር',  // Ethiopian Birr
+    'USD': '\$', // US Dollar
+    'EUR': '€', // Euro
+    'GBP': '£', // British Pound
+    'JPY': '¥', // Japanese Yen
+    'ETB': 'ብር', // Ethiopian Birr
     // Add more currencies as needed
   };
 
-  List<Widget> _buildCurrencyConversionCards(Map<String, double> convertedBalances) {
+  List<Widget> _buildCurrencyConversionCards(
+      Map<String, double> convertedBalances) {
     return convertedBalances.entries.map((entry) {
       String currencyCode = entry.key;
       double value = entry.value;
 
       // Use the currency code to get the appropriate symbol
-      String symbol = currencySymbols[currencyCode] ?? currencyCode; // Default to the currency code if no symbol is found
+      String symbol = currencySymbols[currencyCode] ??
+          currencyCode; // Default to the currency code if no symbol is found
 
       return Card(
         margin: EdgeInsets.symmetric(vertical: 10),

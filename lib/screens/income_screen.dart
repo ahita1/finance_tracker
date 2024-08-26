@@ -124,7 +124,8 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.pushReplacementNamed(context, '/'); // Navigate to homepage
+            Navigator.pushReplacementNamed(
+                context, '/'); // Navigate to homepage
           },
         ),
         actions: [
@@ -186,7 +187,8 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
               GestureDetector(
                 onTap: () => _selectDate(context),
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+                  padding:
+                      EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(12.0),
@@ -214,11 +216,13 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
+                    borderSide:
+                        BorderSide(color: Colors.blueAccent, width: 2.0),
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey[300]!, width: 1.0),
+                    borderSide:
+                        BorderSide(color: Colors.grey[300]!, width: 1.0),
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                 ),
@@ -234,11 +238,13 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
+                    borderSide:
+                        BorderSide(color: Colors.blueAccent, width: 2.0),
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey[300]!, width: 1.0),
+                    borderSide:
+                        BorderSide(color: Colors.grey[300]!, width: 1.0),
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                   suffixIcon: Padding(
@@ -275,7 +281,8 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                     onPressed: _isSubmitting ? null : _addIncome,
                     child: _isSubmitting
                         ? CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
                           )
                         : Text(
                             'ADD INCOME',
