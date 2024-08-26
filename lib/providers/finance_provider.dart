@@ -51,26 +51,28 @@ class FinanceProvider with ChangeNotifier {
 }
 
 
-  Future<void> addIncome(String title, double amount, DateTime date, String category) async {
-    final db = await DatabaseHelper().database;
-    await db.insert('incomes', {
-      'title': title,
-      'amount': amount,
-      'date': date.toIso8601String(),
-      'category': category,
-    });
-    await fetchIncomes(); // Refresh the list after adding
-  }
+Future<void> addIncome(String title, double amount, DateTime date, String category) async {
+  final db = await DatabaseHelper().database;
+  await db.insert('incomes', {
+    'title': title,
+    'amount': amount,
+    'date': date.toIso8601String(),
+    'category': category,
+  });
+  await fetchIncomes(); // Refresh the list after adding
+  notifyListeners(); // Notify listeners to update balance
+}
 
-  Future<void> addExpense(String title, double amount, DateTime date) async {
-    final db = await DatabaseHelper().database;
-    await db.insert('expenses', {
-      'title': title,
-      'amount': amount,
-      'date': date.toIso8601String(),
-    });
-    await fetchExpenses(); // Refresh the list after adding
-  }
+Future<void> addExpense(String title, double amount, DateTime date) async {
+  final db = await DatabaseHelper().database;
+  await db.insert('expenses', {
+    'title': title,
+    'amount': amount,
+    'date': date.toIso8601String(),
+  });
+  await fetchExpenses(); // Refresh the list after adding
+  notifyListeners(); // Notify listeners to update balance
+}
 
   Future<Map<String, double>> getConversionRates() async {
     final rates = await _currencyService.fetchConversionRates();

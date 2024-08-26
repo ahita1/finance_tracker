@@ -46,19 +46,38 @@ class _ExpensePageState extends State<ExpensePage> {
       AddExpenseScreen(),
     ]);
 
-    // Fetch data initially
     final financeProvider =
         Provider.of<FinanceProvider>(context, listen: false);
+    financeProvider.addListener(_onFinanceDataChanged); // Listen for changes
+
     financeProvider.fetchIncomes();
     financeProvider.fetchExpenses();
 
-    _convertedBalancesFuture = _fetchConvertedBalances();
+    _fetchAndUpdateConvertedBalances(); // Initial fetch
+  }
+
+  void _onFinanceDataChanged() {
+    _fetchAndUpdateConvertedBalances();
+  }
+
+  Future<void> _fetchAndUpdateConvertedBalances() async {
+    setState(() {
+      _convertedBalancesFuture = _fetchConvertedBalances();
+    });
   }
 
   Future<Map<String, double>> _fetchConvertedBalances() async {
     final financeProvider =
         Provider.of<FinanceProvider>(context, listen: false);
     return await financeProvider.convertBalanceToCurrencies();
+  }
+
+  @override
+  void dispose() {
+    final financeProvider =
+        Provider.of<FinanceProvider>(context, listen: false);
+    financeProvider.removeListener(_onFinanceDataChanged); // Remove listener
+    super.dispose();
   }
 
   void _onItemTapped(int index) {
@@ -190,61 +209,61 @@ class _ExpensePageState extends State<ExpensePage> {
     );
   }
 
-Widget _buildStatCard({
-  required String title,
-  required String amount,
-  required Color color,
-  required IconData icon,
-}) {
-  return Container(
-    padding: EdgeInsets.all(10),
-    decoration: BoxDecoration(
-      color: color.withOpacity(0.1),
-      borderRadius: BorderRadius.circular(15),
-    ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        CircleAvatar(
-          backgroundColor: color.withOpacity(0.2),
-          child: Icon(
-            icon,
-            color: color,
+  Widget _buildStatCard({
+    required String title,
+    required String amount,
+    required Color color,
+    required IconData icon,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CircleAvatar(
+            backgroundColor: color.withOpacity(0.2),
+            child: Icon(
+              icon,
+              color: color,
+            ),
           ),
-        ),
-        SizedBox(width: 15),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black54,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-              SizedBox(height: 5),
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  amount,
+          SizedBox(width: 15),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
                   style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: color,
+                    fontSize: 16,
+                    color: Colors.black54,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: 5),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    amount,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: color,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 
   Map<String, String> currencySymbols = {
     'USD': '\$',  // US Dollar
@@ -259,7 +278,7 @@ Widget _buildStatCard({
     return convertedBalances.entries.map((entry) {
       String currencyCode = entry.key;
       double value = entry.value;
-      
+
       // Use the currency code to get the appropriate symbol
       String symbol = currencySymbols[currencyCode] ?? currencyCode; // Default to the currency code if no symbol is found
 

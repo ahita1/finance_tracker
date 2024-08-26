@@ -13,6 +13,10 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
   final TextEditingController _amountController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
   String _selectedCategory = 'Salary';
+  bool _isSubmitting = false;
+  String? _titleError;
+  String? _amountError;
+  bool _showSuccessMessage = false;
 
   @override
   void dispose() {
@@ -26,7 +30,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
       context: context,
       initialDate: _selectedDate,
       firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      lastDate: DateTime.now(), // Prevent future date selection
     );
     if (picked != null && picked != _selectedDate) {
       setState(() {
@@ -35,26 +39,58 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
     }
   }
 
-  void _addIncome() async {
-    final String title = _titleController.text;
-    final double amount = double.tryParse(_amountController.text) ?? 0.0;
-    final DateTime date = _selectedDate;
+  bool _validateFields() {
+    setState(() {
+      _titleError = null;
+      _amountError = null;
+    });
 
-    if (title.isEmpty || amount <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter valid title and amount')),
-      );
-      return;
+    bool isValid = true;
+
+    if (_titleController.text.isEmpty || _titleController.text.length < 3) {
+      setState(() {
+        _titleError = 'Title must be at least 3 characters long';
+      });
+      isValid = false;
     }
+
+    final double? amount = double.tryParse(_amountController.text);
+    if (amount == null || amount <= 0) {
+      setState(() {
+        _amountError = 'Please enter a valid positive amount';
+      });
+      isValid = false;
+    }
+
+    if (_selectedDate.isAfter(DateTime.now())) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Selected date cannot be in the future')),
+      );
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  void _addIncome() async {
+    if (!_validateFields()) return;
+
+    setState(() {
+      _isSubmitting = true;
+    });
+
+    final String title = _titleController.text;
+    final double amount = double.parse(_amountController.text);
+    final DateTime date = _selectedDate;
 
     try {
       final financeProvider =
           Provider.of<FinanceProvider>(context, listen: false);
       await financeProvider.addIncome(title, amount, date, _selectedCategory);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Income added successfully')),
-      );
+      setState(() {
+        _showSuccessMessage = true;
+      });
 
       _titleController.clear();
       _amountController.clear();
@@ -62,10 +98,20 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
         _selectedDate = DateTime.now();
         _selectedCategory = 'Salary';
       });
+
+      Future.delayed(Duration(seconds: 3), () {
+        setState(() {
+          _showSuccessMessage = false;
+        });
+      });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to add income')),
       );
+    } finally {
+      setState(() {
+        _isSubmitting = false;
+      });
     }
   }
 
@@ -102,6 +148,31 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              if (_showSuccessMessage)
+                Container(
+                  padding: EdgeInsets.all(16.0),
+                  margin: EdgeInsets.only(bottom: 20.0),
+                  decoration: BoxDecoration(
+                    color: Colors.greenAccent,
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.check_circle, color: Colors.white),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          'Income added successfully!',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               Center(
                 child: Text(
                   'Add Incomes',
@@ -138,6 +209,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                 controller: _titleController,
                 decoration: InputDecoration(
                   labelText: 'Income Title',
+                  errorText: _titleError,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
                   ),
@@ -157,6 +229,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   labelText: 'Amount',
+                  errorText: _amountError,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
                   ),
@@ -199,13 +272,17 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: _addIncome,
-                    child: Text(
-                      'ADD INCOME',
-                      style: TextStyle(
-                        color: Colors.white, // Set text color to white
-                      ),
-                    ),
+                    onPressed: _isSubmitting ? null : _addIncome,
+                    child: _isSubmitting
+                        ? CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          )
+                        : Text(
+                            'ADD INCOME',
+                            style: TextStyle(
+                              color: Colors.white, // Set text color to white
+                            ),
+                          ),
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.symmetric(vertical: 15.0),
                       backgroundColor: Colors.blueAccent, // Background color
@@ -235,7 +312,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.blueAccent : Colors.grey[200],
+          color: isSelected ? Colors.blueAccent : Colors.grey[300],
           borderRadius: BorderRadius.circular(12.0),
         ),
         child: Text(
