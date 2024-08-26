@@ -82,34 +82,35 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, '/'); // Navigate to homepage
-          },
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ExpenseListScreen()),
-              );
-            },
-            child: Text(
-              'View Expenses',
-              style: TextStyle(color: Colors.blue, fontSize: 16.0),
-            ),
-          ),
-        ],
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back, color: Colors.black),
+        onPressed: () {
+          Navigator.pushReplacementNamed(context, '/'); // Navigate to homepage
+        },
       ),
-      body: Padding(
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ExpenseListScreen()),
+            );
+          },
+          child: Text(
+            'View Expenses',
+            style: TextStyle(color: Colors.blue, fontSize: 16.0),
+          ),
+        ),
+      ],
+    ),
+    body: SingleChildScrollView(
+      child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,7 +172,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: 'Amount',
-              border: OutlineInputBorder(
+                border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                  focusedBorder: OutlineInputBorder(
@@ -207,7 +208,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 _buildCategoryButton('Grocery'),
               ],
             ),
-            Spacer(),
+            SizedBox(height: 20),
             Center(
               child: SizedBox(
                 width: double.infinity,
@@ -232,8 +233,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildCategoryButton(String category) {
     bool isSelected = _selectedCategory == category;

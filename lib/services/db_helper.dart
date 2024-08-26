@@ -18,25 +18,29 @@ class DatabaseHelper {
     _database = await _initDatabase();
     return _database!;
   }
+Future<Database> _initDatabase() async {
+  String path = join(await getDatabasesPath(), 'finance_database.db');
+  print('Database path: $path');  // Debug statement
+  final db = await openDatabase(
+    path,
+    onCreate: (db, version) async {
+      await db.execute('CREATE TABLE incomes('
+          'id INTEGER PRIMARY KEY AUTOINCREMENT, '
+          'title TEXT, '
+          'amount REAL, '
+          'date TEXT, '
+          'category TEXT);');
+      await db.execute(
+        'CREATE TABLE expenses(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, amount REAL, date TEXT);',
+      );
+      print('Tables created');  // Debug statement
+    },
+    version: 1,
+  );
+  print('Database initialized');  // Debug statement
+  return db;
+}
 
-  Future<Database> _initDatabase() async {
-    String path = join(await getDatabasesPath(), 'finance_database.db');
-    return openDatabase(
-      path,
-      onCreate: (db, version) async {
-        await db.execute('CREATE TABLE incomes('
-            'id INTEGER PRIMARY KEY AUTOINCREMENT, '
-            'title TEXT, '
-            'amount REAL, '
-            'date TEXT, '
-            'category TEXT);');
-        await db.execute(
-          'CREATE TABLE expenses(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, amount REAL, date TEXT);',
-        );
-      },
-      version: 1,
-    );
-  }
 
   Future<void> deleteDatabase() async {
     String path = join(await getDatabasesPath(), 'finance_database.db');

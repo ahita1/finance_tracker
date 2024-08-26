@@ -2,12 +2,14 @@ import 'package:finance_tracker/screens/expense_list_screen.dart';
 import 'package:finance_tracker/services/db_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dart:io' show Platform;
 import 'providers/finance_provider.dart';
 import 'screens/income_screen.dart';
 import 'screens/expense_screen.dart';
 import 'screens/home_screen.dart';
+
 
 void main() async {
   // Ensure that the Flutter framework is initialized
@@ -23,12 +25,12 @@ void main() async {
   final dbHelper = DatabaseHelper();
 
   // Optionally delete the existing database (for development/debugging purposes)
+  // Uncomment if you need to delete the database on mobile platforms
   // if (Platform.isAndroid || Platform.isIOS) {
-  //   // Avoid deleting the database on mobile platforms
   //   await dbHelper.deleteDatabase();
   // }
 
-  // Recreate the database
+  // Ensure the database is initialized
   await dbHelper.database;
 
   // Run the app

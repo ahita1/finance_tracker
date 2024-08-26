@@ -18,23 +18,38 @@ class FinanceProvider with ChangeNotifier {
   List<Map<String, dynamic>> get incomes => _incomes;
   List<Map<String, dynamic>> get expenses => _expenses;
 
-  Future<List<Map<String, dynamic>>> fetchIncomes() async {
+ Future<List<Map<String, dynamic>>> fetchIncomes() async {
+  try {
     final db = await DatabaseHelper().database;
     final List<Map<String, dynamic>> incomeData = await db.query('incomes');
+    print('Fetched incomes: $incomeData');  // Debug statement
     _incomes = incomeData;
     _totalIncome = _incomes.fold(0, (sum, item) => sum + (item['amount'] as double));
     notifyListeners();
     return _incomes;
+  } catch (e) {
+    print('Error fetching incomes: $e');  // Debug statement
+    return [];
   }
+}
+
+
 
   Future<List<Map<String, dynamic>>> fetchExpenses() async {
+  try {
     final db = await DatabaseHelper().database;
     final List<Map<String, dynamic>> expenseData = await db.query('expenses');
+    print('Fetched expenses: $expenseData');  // Debug statement
     _expenses = expenseData;
     _totalExpenses = _expenses.fold(0, (sum, item) => sum + (item['amount'] as double));
     notifyListeners();
     return _expenses;
+  } catch (e) {
+    print('Error fetching expenses: $e');  // Debug statement
+    return [];
   }
+}
+
 
   Future<void> addIncome(String title, double amount, DateTime date, String category) async {
     final db = await DatabaseHelper().database;
