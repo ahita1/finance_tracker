@@ -39,7 +39,7 @@ class _IncomeListScreenState extends State<IncomeListScreen> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No income data available'));
+            return Center(child: Text('No income data available for this budget cycle'));
           }
 
           final incomes = snapshot.data!;
@@ -74,7 +74,7 @@ class _IncomeListScreenState extends State<IncomeListScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        '${amount} ETB', // Amount with currency symbol on the right
+                        '$amount ETB', // Amount with currency symbol on the right
                         style: TextStyle(
                           color: Colors.blue, // Blue amount text
                           fontWeight: FontWeight.bold,

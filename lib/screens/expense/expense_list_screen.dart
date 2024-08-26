@@ -39,14 +39,14 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No expense data available'));
+            return Center(child: Text('No expense data available for this budget cycle'));
           }
 
           final expenses = snapshot.data!;
           return ListView(
             children: expenses.map((expense) {
               final title = expense['title'] ?? 'No Title';
-              final amount = expense['amount']?.toStringAsFixed(2) ?? '0.00';
+              final amount = (expense['amount'] as double?)?.toStringAsFixed(2) ?? '0.00';
               final date = expense['date'] != null
                   ? DateTime.parse(expense['date']).toLocal()
                   : DateTime.now();
@@ -56,7 +56,7 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
                 icon: Icons.money_off, // Use an appropriate icon
                 title: title,
                 date: formattedDate,
-                amount: 'ETB ${amount}', // Prefix with ETB
+                amount: 'ETB $amount', // Prefix with ETB
               );
             }).toList(),
           );

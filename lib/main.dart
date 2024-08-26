@@ -2,14 +2,13 @@ import 'package:finance_tracker/screens/expense/expense_list_screen.dart';
 import 'package:finance_tracker/services/db_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dart:io' show Platform;
 import 'providers/finance_provider.dart';
 import 'screens/income/income_screen.dart';
 import 'screens/expense/expense_screen.dart';
 import 'screens/home/home_screen.dart';
-
+import 'screens/home/home_page.dart';
 
 void main() async {
   // Ensure that the Flutter framework is initialized
@@ -50,7 +49,8 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           appBarTheme: AppBarTheme(
-            backgroundColor: Colors.blueAccent, // Background color of the AppBar
+            backgroundColor:
+                Colors.blueAccent, // Background color of the AppBar
             elevation: 4, // Elevation for shadow effect
             titleTextStyle: TextStyle(
               color: Colors.white, // Color of the AppBar title
@@ -62,10 +62,12 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        debugShowCheckedModeBanner: false, // Add this line to remove the DEBUG banner
+        debugShowCheckedModeBanner:
+            false, // Add this line to remove the DEBUG banner
         initialRoute: '/', // Set the initial route to the HomeScreen
         routes: {
-          '/': (context) => ExpenseApp(),
+          '/': (context) => HomePage(),
+          '/expp': (context) => ExpenseApp(),
           '/income': (context) => AddIncomeScreen(),
           '/expense': (context) => AddExpenseScreen(),
           '/viewexpenses': (context) => ExpenseListScreen(),
