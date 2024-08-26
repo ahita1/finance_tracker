@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import 'package:finance_tracker/providers/finance_provider.dart';
 
 class IncomeListScreen extends StatefulWidget {
@@ -23,12 +24,12 @@ class _IncomeListScreenState extends State<IncomeListScreen> {
       appBar: AppBar(
         title: Text(
           'Income List',
-          style: TextStyle(color: Colors.white), // Set title color to white
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-        backgroundColor: Colors.blue, // Original color blue
+        backgroundColor: Colors.blueAccent,
         iconTheme: IconThemeData(
-          color: Colors.white, // Set icon color to white
+          color: Colors.white,
         ),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
@@ -43,56 +44,102 @@ class _IncomeListScreenState extends State<IncomeListScreen> {
           }
 
           final incomes = snapshot.data!;
-          return ListView(
+          return ListView.builder(
             padding: EdgeInsets.all(16.0),
-            children: incomes.map((income) {
+            itemCount: incomes.length,
+            itemBuilder: (context, index) {
+              final income = incomes[index];
               final title = income['title'] ?? 'No Title';
               final amount = income['amount']?.toStringAsFixed(2) ?? '0.00';
               final category = income['category'] ?? 'No Category';
               final date = income['date'] != null
                   ? DateTime.parse(income['date']).toLocal()
                   : DateTime.now();
-              final formattedDate = "${date.day}/${date.month}/${date.year}";
+              final formattedDate = DateFormat.yMMMd().format(date);
 
-              return Card(
-                elevation: 5,
-                margin: EdgeInsets.symmetric(vertical: 8.0),
-                child: ListTile(
-                  contentPadding: EdgeInsets.all(16.0),
-                  leading: Icon(Icons.monetization_on,
-                      color: Colors.blue, size: 40), // Blue icon
-                  title: Text(
-                    title,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                  ),
-                  subtitle: Text(
-                    '$category',
-                    style: TextStyle(color: Colors.grey[600]),
-                  ),
-                  trailing: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '$amount ETB', // Amount with currency symbol on the right
-                        style: TextStyle(
-                          color: Colors.blue, // Blue amount text
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      SizedBox(height: 4.0),
-                      Text(
-                        formattedDate,
-                        style: TextStyle(color: Colors.grey[600]),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }).toList(),
+              return _buildIncomeCard(title, amount, category, formattedDate);
+            },
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildIncomeCard(String title, String amount, String category, String date) {
+    return Card(
+      margin: EdgeInsets.symmetric(vertical: 10.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      elevation: 8,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          gradient: LinearGradient(
+            colors: [Colors.blueAccent, Colors.lightBlueAccent],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.attach_money,
+                color: Colors.white,
+                size: 40,
+              ),
+              SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      category,
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 16),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'ETB $amount',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    date,
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

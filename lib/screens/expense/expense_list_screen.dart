@@ -23,12 +23,12 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
       appBar: AppBar(
         title: Text(
           'Expense List',
-          style: TextStyle(color: Colors.white), // Set text color to white
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-        backgroundColor: Colors.blue, // Background color
+        backgroundColor: Colors.blueAccent, // Use a red accent for expenses
         iconTheme: IconThemeData(
-          color: Colors.white, // Set icon color to white
+          color: Colors.white,
         ),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
@@ -43,8 +43,11 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
           }
 
           final expenses = snapshot.data!;
-          return ListView(
-            children: expenses.map((expense) {
+          return ListView.builder(
+            padding: EdgeInsets.all(16.0),
+            itemCount: expenses.length,
+            itemBuilder: (context, index) {
+              final expense = expenses[index];
               final title = expense['title'] ?? 'No Title';
               final amount = (expense['amount'] as double?)?.toStringAsFixed(2) ?? '0.00';
               final date = expense['date'] != null
@@ -53,12 +56,12 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
               final formattedDate = "${date.day}/${date.month}/${date.year}";
 
               return SpendItem(
-                icon: Icons.money_off, // Use an appropriate icon
+                icon: Icons.receipt_long, // Use the effective receipt icon
                 title: title,
                 date: formattedDate,
                 amount: 'ETB $amount', // Prefix with ETB
               );
-            }).toList(),
+            },
           );
         },
       ),
