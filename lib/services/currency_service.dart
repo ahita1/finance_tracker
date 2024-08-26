@@ -6,7 +6,7 @@ class CurrencyService {
   final String _baseUrl = 'https://v6.exchangerate-api.com/v6/';
 
   Future<Map<String, double>> fetchConversionRates() async {
-    final url = '${_baseUrl}$_apiKey/latest/ETB'; // Endpoint to get rates based on USD
+    final url = '${_baseUrl}$_apiKey/latest/ETB'; // Endpoint to get rates based on ETB
 
     try {
       final response = await http.get(Uri.parse(url));

@@ -10,14 +10,16 @@ class BottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
+    
         BottomNavigationBarItem(
           icon: Icon(Icons.attach_money),
           label: 'Income',
         ),
+    BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        
         BottomNavigationBarItem(
           icon: Icon(Icons.money_off),
           label: 'Expenses',

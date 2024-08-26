@@ -18,27 +18,35 @@ class FinanceProvider with ChangeNotifier {
   List<Map<String, dynamic>> get incomes => _incomes;
   List<Map<String, dynamic>> get expenses => _expenses;
 
-  Future<void> fetchIncomes() async {
+  Future<List<Map<String, dynamic>>> fetchIncomes() async {
+    print('Fetching incomes...');
     final db = await DatabaseHelper().database;
     final List<Map<String, dynamic>> incomeData = await db.query('incomes');
+    print('Fetched Incomes: $incomeData'); // Debug print
     _incomes = incomeData;
     _totalIncome = _incomes.fold(0, (sum, item) => sum + (item['amount'] as double));
     notifyListeners();
+    return _incomes;
   }
 
-  Future<void> fetchExpenses() async {
+  Future<List<Map<String, dynamic>>> fetchExpenses() async {
+    print('Fetching expenses...');
     final db = await DatabaseHelper().database;
     final List<Map<String, dynamic>> expenseData = await db.query('expenses');
+    print('Fetched Expenses: $expenseData'); // Debug print
     _expenses = expenseData;
     _totalExpenses = _expenses.fold(0, (sum, item) => sum + (item['amount'] as double));
     notifyListeners();
+    return _expenses;
   }
 
-  Future<void> addIncome(String title, double amount) async {
+  Future<void> addIncome(String title, double amount, DateTime date, String category) async {
     final db = await DatabaseHelper().database;
     await db.insert('incomes', {
       'title': title,
       'amount': amount,
+      'date': date.toIso8601String(),
+      'category': category,
     });
     await fetchIncomes(); // Refresh the list after adding
   }
@@ -54,22 +62,21 @@ class FinanceProvider with ChangeNotifier {
   }
 
   Future<Map<String, double>> getConversionRates() async {
-    return await _currencyService.fetchConversionRates();
+    final rates = await _currencyService.fetchConversionRates();
+    print('Conversion Rates: $rates'); // Log the API response
+    return rates;
   }
 
   Future<Map<String, double>> convertBalanceToCurrencies() async {
     final conversionRates = await getConversionRates();
-    final balanceInEtb = this.balance; // Assuming the balance is in ETB
+    final balanceInEtb = this.balance; // Balance is in ETB
     
-    // Convert ETB to USD
-    double etbToUsdRate = conversionRates['USD'] ?? 1.0; // Get USD rate from conversion rates
-    double balanceInUsd = balanceInEtb / etbToUsdRate; // Convert ETB to USD
-    
+    // Convert ETB to other currencies
     return {
-      'EUR': _currencyService.convertAmount(balanceInUsd, conversionRates['EUR'] ?? 0.0),
-      'GBP': _currencyService.convertAmount(balanceInUsd, conversionRates['GBP'] ?? 0.0),
-      'USD': balanceInUsd, // USD is the base currency
-      'JPY': _currencyService.convertAmount(balanceInUsd, conversionRates['JPY'] ?? 0.0),
+      'EUR': _currencyService.convertAmount(balanceInEtb, conversionRates['EUR'] ?? 0.0),
+      'GBP': _currencyService.convertAmount(balanceInEtb, conversionRates['GBP'] ?? 0.0),
+      'USD': _currencyService.convertAmount(balanceInEtb, conversionRates['USD'] ?? 0.0),
+      'JPY': _currencyService.convertAmount(balanceInEtb, conversionRates['JPY'] ?? 0.0),
     };
   }
 }

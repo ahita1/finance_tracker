@@ -1,37 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/finance_provider.dart';
+import 'package:finance_tracker/providers/finance_provider.dart';
+import 'try.dart'; // Import the try.dart file
 
-class IncomeScreen extends StatefulWidget {
+class AddIncomeScreen extends StatefulWidget {
   @override
-  _IncomeScreenState createState() => _IncomeScreenState();
+  _AddIncomeScreenState createState() => _AddIncomeScreenState();
 }
 
-class _IncomeScreenState extends State<IncomeScreen> {
-  final _formKey = GlobalKey<FormState>();
+class _AddIncomeScreenState extends State<AddIncomeScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
+  DateTime _selectedDate = DateTime.now();
+  String _selectedCategory = 'Salary';
 
-  @override
-  void initState() {
-    super.initState();
-    // Fetch incomes when the screen is initialized
-    Provider.of<FinanceProvider>(context, listen: false).fetchIncomes();
-  }
-
-  void _saveIncome() {
-    if (_formKey.currentState!.validate()) {
-      String title = _titleController.text;
-      double amount = double.tryParse(_amountController.text) ?? 0.0;
-
-      Provider.of<FinanceProvider>(context, listen: false)
-          .addIncome(title, amount)
-          .then((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Income added successfully!')),
-        );
-        _titleController.clear();
-        _amountController.clear();
+  void _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
       });
     }
   }
@@ -39,80 +31,200 @@ class _IncomeScreenState extends State<IncomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.of(context).pushReplacementNamed('/'), // Navigate to homepage
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => IncomeListScreen()), // Navigate to try.dart screen
+              );
+            },
+            child: Text(
+              'View Incomes',
+              style: TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            // Displaying the total income at the top
-            Consumer<FinanceProvider>(
-              builder: (context, financeProvider, child) {
-                return Text(
-                  'Total Income: \$${financeProvider.totalIncome.toStringAsFixed(2)}',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blueAccent,
-                  ),
-                );
-              },
-            ),
-            SizedBox(height: 20),
-            Form(
-              key: _formKey,
-              child: Column(
-                children: <Widget>[
-                  TextFormField(
-                    controller: _titleController,
-                    decoration: InputDecoration(labelText: 'Title'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a title';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: _amountController,
-                    decoration: InputDecoration(labelText: 'Amount'),
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter an amount';
-                      }
-                      if (double.tryParse(value) == null) {
-                        return 'Please enter a valid number';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _saveIncome,
-                    child: Text('Add Income'),
-                  ),
-                ],
+            Center(
+              child: Text(
+                'Add Incomes',
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             SizedBox(height: 20),
-            // Display incomes in a table
-            Expanded(
-              child: Consumer<FinanceProvider>(
-                builder: (context, financeProvider, child) {
-                  return ListView.builder(
-                    itemCount: financeProvider.incomes.length,
-                    itemBuilder: (context, index) {
-                      final income = financeProvider.incomes[index];
-                      return ListTile(
-                        title: Text(income['title']),
-                        trailing: Text('\$${income['amount'].toStringAsFixed(2)}'),
+            // Custom Date Picker
+            GestureDetector(
+              onTap: () => _selectDate(context),
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Icon(Icons.calendar_today, color: Colors.black),
+                    Text(
+                      "${_selectedDate.toLocal()}".split(' ')[0],
+                      style: TextStyle(fontSize: 18.0),
+                    ),
+                    Icon(Icons.arrow_drop_down, color: Colors.black),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            // Income Title Input
+            TextField(
+              controller: _titleController,
+              decoration: InputDecoration(
+                labelText: 'Income Title',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            // Amount Input
+            TextField(
+              controller: _amountController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: 'Amount',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                suffixIcon: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(
+                    '\$',
+                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            // Income Category
+            Text(
+              'Income Category',
+              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                _buildCategoryButton('Salary'),
+                SizedBox(width: 10),
+                _buildCategoryButton('Rewards'),
+                // Add more categories if needed
+              ],
+            ),
+            Spacer(),
+            // Add Income Button
+            Center(
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (_titleController.text.isNotEmpty &&
+                        _amountController.text.isNotEmpty) {
+                      double amount = double.parse(_amountController.text);
+
+                      try {
+                        await Provider.of<FinanceProvider>(context, listen: false).addIncome(
+                          _titleController.text,
+                          amount,
+                          _selectedDate,
+                          _selectedCategory,
+                        );
+
+                        // Show success message
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Income added successfully!'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+
+                        // Clear the fields
+                        _titleController.clear();
+                        _amountController.clear();
+                      } catch (error) {
+                        // Handle error if needed
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('An error occurred. Please try again.'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    } else {
+                      // Show an error message if fields are empty
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Please fill all fields')),
                       );
-                    },
-                  );
-                },
+                    }
+                  },
+                  child: Text('ADD INCOME'),
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 15.0),
+                    backgroundColor: Colors.blueAccent,
+                    textStyle: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                  ),
+                ),
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryButton(String category) {
+    bool isSelected = _selectedCategory == category;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedCategory = category;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.blueAccent : Colors.grey[200],
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: Text(
+          category,
+          style: TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+            color: isSelected ? Colors.white : Colors.black,
+          ),
         ),
       ),
     );

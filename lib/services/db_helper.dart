@@ -26,9 +26,12 @@ class DatabaseHelper {
       path,
       onCreate: (db, version) async {
         print('Creating tables'); // Debug log
-        await db.execute(
-          'CREATE TABLE incomes(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, amount REAL);',
-        );
+        await db.execute('CREATE TABLE incomes('
+            'id INTEGER PRIMARY KEY AUTOINCREMENT, '
+            'title TEXT, '
+            'amount REAL, '
+            'date TEXT, '
+            'category TEXT);');
         await db.execute(
           'CREATE TABLE expenses(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, amount REAL, date TEXT);',
         );

@@ -1,107 +1,194 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/finance_provider.dart';
+import 'package:finance_tracker/providers/finance_provider.dart';
+import 'expense_list_screen.dart';
 
-class ExpenseScreen extends StatefulWidget {
+class AddExpenseScreen extends StatefulWidget {
   @override
-  _ExpenseScreenState createState() => _ExpenseScreenState();
+  _AddExpenseScreenState createState() => _AddExpenseScreenState();
 }
 
-class _ExpenseScreenState extends State<ExpenseScreen> {
-  final _formKey = GlobalKey<FormState>();
+class _AddExpenseScreenState extends State<AddExpenseScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
+  DateTime _selectedDate = DateTime.now();
+  String _selectedCategory = 'Health';
 
-  @override
-  void initState() {
-    super.initState();
-    // Fetch expenses when the screen is initialized
-    Provider.of<FinanceProvider>(context, listen: false).fetchExpenses();
+  void _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
   }
 
-  void _saveExpense() {
-    if (_formKey.currentState!.validate()) {
-      final String title = _titleController.text;
-      final double amount = double.tryParse(_amountController.text) ?? 0.0;
-      final DateTime enteredDate = DateTime.now();
+  void _addExpense() async {
+    final String title = _titleController.text;
+    final double amount = double.tryParse(_amountController.text) ?? 0.0;
+    final DateTime date = _selectedDate;
 
-      // Add expense and handle the result
-      Provider.of<FinanceProvider>(context, listen: false)
-          .addExpense(title, amount, enteredDate)
-          .then((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Expense added successfully!')),
-        );
-        _titleController.clear();
-        _amountController.clear();
+    if (title.isEmpty || amount <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please enter valid title and amount')),
+      );
+      return;
+    }
+
+    try {
+      final financeProvider =
+          Provider.of<FinanceProvider>(context, listen: false);
+      await financeProvider.addExpense(title, amount, date);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Expense added successfully')),
+      );
+
+      _titleController.clear();
+      _amountController.clear();
+      setState(() {
+        _selectedDate = DateTime.now();
+        _selectedCategory = 'Health';
       });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to add expense')),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context); // Get the current theme
-
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('Expense Tracker'),
-      //   backgroundColor: theme.appBarTheme.backgroundColor,
-      // ),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, '/'); // Navigate to homepage
+          },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ExpenseListScreen()),
+              );
+            },
+            child: Text(
+              'View Expenses',
+              style: TextStyle(color: Colors.blue, fontSize: 16.0),
+            ),
+          ),
+        ],
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            // Displaying the total expense at the top
-            Consumer<FinanceProvider>(
-              builder: (context, financeProvider, child) {
-                return Text(
-                  'Total Expenses: \$${financeProvider.totalExpenses.toStringAsFixed(2)}',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: theme.primaryColor, // Use primary color
-                  ),
-                );
-              },
+            Center(
+              child: Text(
+                'Add Expenses',
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
             SizedBox(height: 20),
-            // Expense Form
-            _buildExpenseForm(),
+            GestureDetector(
+              onTap: () => _selectDate(context),
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Icon(Icons.arrow_back_ios, color: Colors.black),
+                    Text(
+                      "${_selectedDate.toLocal()}".split(' ')[0],
+                      style: TextStyle(fontSize: 18.0),
+                    ),
+                    Icon(Icons.arrow_forward_ios, color: Colors.black),
+                  ],
+                ),
+              ),
+            ),
             SizedBox(height: 20),
-            // Displaying expenses in a list
-            Expanded(
-              child: Consumer<FinanceProvider>(
-                builder: (context, financeProvider, child) {
-                  return ListView.builder(
-                    itemCount: financeProvider.expenses.length,
-                    itemBuilder: (context, index) {
-                      final expense = financeProvider.expenses[index];
-                      return Card(
-                        elevation: 4,
-                        margin: EdgeInsets.symmetric(vertical: 8),
-                        child: ListTile(
-                          contentPadding: EdgeInsets.all(16),
-                          title: Text(
-                            expense['title'],
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text(
-                            'Date: ${DateTime.parse(expense['date']).toLocal().toString().split(' ')[0]}',
-                            style: TextStyle(color: Colors.grey[600]),
-                          ),
-                          trailing: Text(
-                            '\$${expense['amount'].toStringAsFixed(2)}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: theme.primaryColor, // Use primary color
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
+            TextField(
+              controller: _titleController,
+              decoration: InputDecoration(
+                labelText: 'Expense Title',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            TextField(
+              controller: _amountController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: 'Amount',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                suffixIcon: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(
+                    '\$',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Expense Category',
+              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                _buildCategoryButton('Health'),
+                SizedBox(width: 10),
+                _buildCategoryButton('Grocery'),
+              ],
+            ),
+            Spacer(),
+            Center(
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _addExpense,
+                  child: Text('ADD EXPENSE'),
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 15.0),
+                    backgroundColor: Colors.blueAccent, // Background color
+                    textStyle: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white, // Text color
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                  ),
+                ),
               ),
             ),
           ],
@@ -109,68 +196,31 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
       ),
     );
   }
-Widget _buildExpenseForm() {
-  final theme = Theme.of(context); // Get the current theme
 
-  return Form(
-    key: _formKey,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        TextFormField(
-          controller: _titleController,
-          decoration: InputDecoration(
-            labelText: 'Title',
-            border: OutlineInputBorder(),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blueAccent, width: 2.0), // Use primary color
-            ),
-          ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter a title';
-            }
-            return null;
-          },
-        ),
-        SizedBox(height: 16),
-        TextFormField(
-          controller: _amountController,
-          decoration: InputDecoration(
-            labelText: 'Amount',
-            border: OutlineInputBorder(),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blueAccent, width: 2.0), // Use primary color
-            ),
-          ),
-          keyboardType: TextInputType.number,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter an amount';
-            }
-            if (double.tryParse(value) == null) {
-              return 'Please enter a valid number';
-            }
-            return null;
-          },
-        ),
-        SizedBox(height: 20),
-        ElevatedButton(
-          onPressed: _saveExpense,
-          child: Text('Add Expense'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blueAccent, // Use primary color
-            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-            textStyle: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.white, // Set text color to white
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
-}
+  Widget _buildCategoryButton(String category) {
+    bool isSelected = _selectedCategory == category;
 
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedCategory = category;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.blueAccent : Colors.grey[200],
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: Text(
+          category,
+          style: TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+            color: isSelected ? Colors.white : Colors.black,
+          ),
+        ),
+      ),
+    );
+  }
 }

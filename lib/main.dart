@@ -1,18 +1,37 @@
+import 'package:finance_tracker/screens/expense_list_screen.dart';
+import 'package:finance_tracker/services/db_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dart:io' show Platform;
-
 import 'providers/finance_provider.dart';
 import 'screens/income_screen.dart';
 import 'screens/expense_screen.dart';
 import 'screens/home_screen.dart';
 
-void main() {
+void main() async {
+  // Ensure that the Flutter framework is initialized
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize database settings for desktop platforms
   if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
   }
+
+  // Initialize the database helper
+  final dbHelper = DatabaseHelper();
+
+  // Optionally delete the existing database (for development/debugging purposes)
+  // if (Platform.isAndroid || Platform.isIOS) {
+  //   // Avoid deleting the database on mobile platforms
+  //   await dbHelper.deleteDatabase();
+  // }
+
+  // Recreate the database
+  await dbHelper.database;
+
+  // Run the app
   runApp(MyApp());
 }
 
@@ -41,12 +60,13 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
+        debugShowCheckedModeBanner: false, // Add this line to remove the DEBUG banner
         initialRoute: '/', // Set the initial route to the HomeScreen
         routes: {
-          '/': (context) => HomeScreen(),
-          '/income': (context) => IncomeScreen(),
-          '/expense': (context) => ExpenseScreen(),
-          // '/add_edit': (context) => AddEditItemScreen(),
+          '/': (context) => ExpenseApp(),
+          '/income': (context) => AddIncomeScreen(),
+          '/expense': (context) => AddExpenseScreen(),
+          '/viewexpenses': (context) => ExpenseListScreen(),
         },
       ),
     );
