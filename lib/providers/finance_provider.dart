@@ -19,10 +19,8 @@ class FinanceProvider with ChangeNotifier {
   List<Map<String, dynamic>> get expenses => _expenses;
 
   Future<List<Map<String, dynamic>>> fetchIncomes() async {
-    print('Fetching incomes...');
     final db = await DatabaseHelper().database;
     final List<Map<String, dynamic>> incomeData = await db.query('incomes');
-    print('Fetched Incomes: $incomeData'); // Debug print
     _incomes = incomeData;
     _totalIncome = _incomes.fold(0, (sum, item) => sum + (item['amount'] as double));
     notifyListeners();
@@ -30,10 +28,8 @@ class FinanceProvider with ChangeNotifier {
   }
 
   Future<List<Map<String, dynamic>>> fetchExpenses() async {
-    print('Fetching expenses...');
     final db = await DatabaseHelper().database;
     final List<Map<String, dynamic>> expenseData = await db.query('expenses');
-    print('Fetched Expenses: $expenseData'); // Debug print
     _expenses = expenseData;
     _totalExpenses = _expenses.fold(0, (sum, item) => sum + (item['amount'] as double));
     notifyListeners();
@@ -63,7 +59,6 @@ class FinanceProvider with ChangeNotifier {
 
   Future<Map<String, double>> getConversionRates() async {
     final rates = await _currencyService.fetchConversionRates();
-    print('Conversion Rates: $rates'); // Log the API response
     return rates;
   }
 

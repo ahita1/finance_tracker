@@ -24,7 +24,6 @@ class CurrencyService {
         throw Exception('Failed to load currency conversion rates');
       }
     } catch (e) {
-      print('Failed to fetch conversion rates: $e');
       throw Exception('Failed to fetch conversion rates');
     }
   }

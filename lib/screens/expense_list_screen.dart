@@ -21,8 +21,15 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Expense List'),
+        title: Text(
+          'Expense List',
+          style: TextStyle(color: Colors.white), // Set text color to white
+        ),
         centerTitle: true,
+        backgroundColor: Colors.blue, // Background color
+        iconTheme: IconThemeData(
+          color: Colors.white, // Set icon color to white
+        ),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _expensesFuture,
@@ -49,8 +56,7 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
                 icon: Icons.money_off, // Use an appropriate icon
                 title: title,
                 date: formattedDate,
-                amount: '- \$${amount}', // Negative for expenses
-                paymentMethod: 'Unknown', // You can add paymentMethod field to your expense table if needed
+                amount: 'ETB ${amount}', // Prefix with ETB
               );
             }).toList(),
           );

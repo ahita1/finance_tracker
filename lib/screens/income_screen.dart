@@ -68,7 +68,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
               ),
             ),
             SizedBox(height: 20),
-            // Custom Date Picker
+            // Updated Date Picker Design
             GestureDetector(
               onTap: () => _selectDate(context),
               child: Container(
@@ -80,12 +80,12 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Icon(Icons.calendar_today, color: Colors.black),
+                    Icon(Icons.arrow_back_ios, color: Colors.black),
                     Text(
                       "${_selectedDate.toLocal()}".split(' ')[0],
                       style: TextStyle(fontSize: 18.0),
                     ),
-                    Icon(Icons.arrow_drop_down, color: Colors.black),
+                    Icon(Icons.arrow_forward_ios, color: Colors.black),
                   ],
                 ),
               ),
@@ -97,6 +97,14 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
               decoration: InputDecoration(
                 labelText: 'Income Title',
                 border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey[300]!, width: 1.0),
                   borderRadius: BorderRadius.circular(12.0),
                 ),
               ),
@@ -111,6 +119,14 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.0),
                 ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey[300]!, width: 1.0),
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
                 suffixIcon: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Text(
@@ -119,6 +135,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                   ),
                 ),
               ),
+           
             ),
             SizedBox(height: 20),
             // Income Category
@@ -181,15 +198,17 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
                       );
                     }
                   },
-                  child: Text('ADD INCOME'),
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 15.0),
-                    backgroundColor: Colors.blueAccent,
-                    textStyle: TextStyle(
+                  child: Text(
+                    'ADD INCOME',
+                    style: TextStyle(
+                      color: Colors.white, // This sets the text color to white
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
                     ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 15.0),
+                    backgroundColor: Colors.blueAccent, // Background color
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.0),
                     ),

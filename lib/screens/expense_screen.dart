@@ -11,8 +11,28 @@ class AddExpenseScreen extends StatefulWidget {
 class _AddExpenseScreenState extends State<AddExpenseScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
+  final FocusNode _titleFocusNode = FocusNode();
+  final FocusNode _amountFocusNode = FocusNode();
   DateTime _selectedDate = DateTime.now();
   String _selectedCategory = 'Health';
+
+  @override
+  void initState() {
+    super.initState();
+    _titleFocusNode.addListener(() {
+      setState(() {});
+    });
+    _amountFocusNode.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _titleFocusNode.dispose();
+    _amountFocusNode.dispose();
+    super.dispose();
+  }
 
   void _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -128,9 +148,18 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             SizedBox(height: 20),
             TextField(
               controller: _titleController,
+              focusNode: _titleFocusNode,
               decoration: InputDecoration(
                 labelText: 'Expense Title',
                 border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                 enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey[300]!, width: 1.0),
                   borderRadius: BorderRadius.circular(12.0),
                 ),
               ),
@@ -138,10 +167,19 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             SizedBox(height: 20),
             TextField(
               controller: _amountController,
+              focusNode: _amountFocusNode,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: 'Amount',
-                border: OutlineInputBorder(
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                 focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                 enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey[300]!, width: 1.0),
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 suffixIcon: Padding(
@@ -175,15 +213,15 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _addExpense,
-                  child: Text('ADD EXPENSE'),
+                  child: Text(
+                    'ADD EXPENSE',
+                    style: TextStyle(
+                      color: Colors.white, // Set text color to white
+                    ),
+                  ),
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 15.0),
                     backgroundColor: Colors.blueAccent, // Background color
-                    textStyle: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white, // Text color
-                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.0),
                     ),

@@ -21,11 +21,9 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     String path = join(await getDatabasesPath(), 'finance_database.db');
-    print('Database path: $path'); // Debug log
     return openDatabase(
       path,
       onCreate: (db, version) async {
-        print('Creating tables'); // Debug log
         await db.execute('CREATE TABLE incomes('
             'id INTEGER PRIMARY KEY AUTOINCREMENT, '
             'title TEXT, '

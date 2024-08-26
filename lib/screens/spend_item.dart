@@ -5,14 +5,12 @@ class SpendItem extends StatelessWidget {
   final String title;
   final String date;
   final String amount;
-  final String paymentMethod;
 
   const SpendItem({
     required this.icon,
     required this.title,
     required this.date,
     required this.amount,
-    required this.paymentMethod,
   });
 
   @override
@@ -34,10 +32,6 @@ class SpendItem extends StatelessWidget {
           title,
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        subtitle: Text(
-          'Date: $date\nPayment Method: $paymentMethod',
-          style: TextStyle(color: Colors.grey[600]),
-        ),
         trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -47,8 +41,13 @@ class SpendItem extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Colors.green[700],
+                color: Colors.red[700], // Color for expenses
               ),
+            ),
+            SizedBox(height: 4.0),
+            Text(
+              date,
+              style: TextStyle(color: Colors.grey[600]),
             ),
           ],
         ),
