@@ -23,7 +23,6 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  /// Animation widget based on index and delay
   Widget animationDo(
     int index,
     int delay,
@@ -94,31 +93,17 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
-
-                        /// Subtitle Text
-                        // animationDo(
-                        //   index,
-                        //   500,
-                        //   Text(
-                        //     listOfItems[index].subTitle,
-                        //     textAlign: TextAlign.center,
-                        //     style: textTheme.displayMedium,
-                        //   ),
-                        // ),
                       ],
                     ),
                   );
                 },
               ),
             ),
-
-            /// Controls and indicators
             Expanded(
               flex: 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  /// Page Indicator
                   SmoothPageIndicator(
                     controller: pageController,
                     count: listOfItems.length,

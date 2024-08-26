@@ -31,7 +31,7 @@ class ExpensePage extends StatefulWidget {
 }
 
 class _ExpensePageState extends State<ExpensePage> {
-  int _selectedIndex = 1; // Default to 'Home' tab
+  int _selectedIndex = 1;
 
   Future<Map<String, double>>? _convertedBalancesFuture;
 
@@ -48,12 +48,12 @@ class _ExpensePageState extends State<ExpensePage> {
 
     final financeProvider =
         Provider.of<FinanceProvider>(context, listen: false);
-    financeProvider.addListener(_onFinanceDataChanged); // Listen for changes
+    financeProvider.addListener(_onFinanceDataChanged);
 
     financeProvider.fetchIncomes();
     financeProvider.fetchExpenses();
 
-    _fetchAndUpdateConvertedBalances(); // Initial fetch
+    _fetchAndUpdateConvertedBalances();
   }
 
   void _onFinanceDataChanged() {
@@ -76,7 +76,7 @@ class _ExpensePageState extends State<ExpensePage> {
   void dispose() {
     final financeProvider =
         Provider.of<FinanceProvider>(context, listen: false);
-    financeProvider.removeListener(_onFinanceDataChanged); // Remove listener
+    financeProvider.removeListener(_onFinanceDataChanged);
     super.dispose();
   }
 
@@ -138,8 +138,8 @@ class _ExpensePageState extends State<ExpensePage> {
                       ),
                       SizedBox(height: 20),
                       Container(
-                        width: 150,
-                        height: 150,
+                        width: 140,
+                        height: 140,
                         decoration: BoxDecoration(
                           color: Colors.blue,
                           shape: BoxShape.circle,
@@ -158,14 +158,14 @@ class _ExpensePageState extends State<ExpensePage> {
                           child: Text(
                             '${financeProvider.balance.toStringAsFixed(2)} Birr',
                             style: TextStyle(
-                              fontSize: 32,
+                              fontSize: 28,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
                           ),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 25),
                       FutureBuilder<Map<String, double>>(
                         future: _convertedBalancesFuture,
                         builder: (context, snapshot) {
@@ -186,9 +186,16 @@ class _ExpensePageState extends State<ExpensePage> {
                             );
                           } else {
                             final convertedBalances = snapshot.data!;
-                            return Container(
-                              height: 200,
-                              child: ListView(
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 12.0),
+                              child: GridView.count(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 12,
+                                mainAxisSpacing: 12,
+                                childAspectRatio: 3 / 2,
                                 children: _buildCurrencyConversionCards(
                                     convertedBalances),
                               ),
@@ -200,7 +207,7 @@ class _ExpensePageState extends State<ExpensePage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 20),
               ],
             ),
           ),
@@ -266,12 +273,11 @@ class _ExpensePageState extends State<ExpensePage> {
   }
 
   Map<String, String> currencySymbols = {
-    'USD': '\$', // US Dollar
-    'EUR': '€', // Euro
-    'GBP': '£', // British Pound
-    'JPY': '¥', // Japanese Yen
-    'ETB': 'ብር', // Ethiopian Birr
-    // Add more currencies as needed
+    'USD': '\$',
+    'EUR': '€',
+    'GBP': '£',
+    'JPY': '¥',
+    'ETB': 'ብር'
   };
 
   List<Widget> _buildCurrencyConversionCards(
@@ -280,27 +286,63 @@ class _ExpensePageState extends State<ExpensePage> {
       String currencyCode = entry.key;
       double value = entry.value;
 
-      // Use the currency code to get the appropriate symbol
-      String symbol = currencySymbols[currencyCode] ??
-          currencyCode; // Default to the currency code if no symbol is found
+      String symbol = currencySymbols[currencyCode] ?? currencyCode;
 
-      return Card(
-        margin: EdgeInsets.symmetric(vertical: 10),
-        child: ListTile(
-          leading: Text(
-            symbol,
-            style: TextStyle(
-              fontSize: 24, // Adjust size as needed
-            ),
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          gradient: LinearGradient(
+            colors: [
+              Colors.lightBlueAccent.withOpacity(0.6),
+              Colors.lightBlue.withOpacity(0.6)
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          title: Text('$currencyCode Balance'),
-          trailing: Text(
-            '$symbol${value.toStringAsFixed(2)}',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.blueGrey[800],
+          boxShadow: [
+            BoxShadow(
+              color: Colors.blueAccent.withOpacity(0.2),
+              spreadRadius: 2,
+              blurRadius: 8,
+              offset: Offset(0, 4),
             ),
-          ),
+          ],
+        ),
+        padding: EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.white.withOpacity(0.8),
+              child: Text(
+                symbol,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.blueGrey[800],
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            SizedBox(height: 12),
+            Text(
+              '$currencyCode Balance',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(height: 6),
+            Text(
+              '$symbol${value.toStringAsFixed(2)}',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ],
         ),
       );
     }).toList();

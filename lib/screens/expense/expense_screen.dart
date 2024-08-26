@@ -29,7 +29,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       context: context,
       initialDate: _selectedDate,
       firstDate: DateTime(2000),
-      lastDate: DateTime.now(), // Restrict future dates
+      lastDate: DateTime.now(),
     );
     if (picked != null && picked != _selectedDate) {
       setState(() {
@@ -52,7 +52,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     });
 
     try {
-      final financeProvider = Provider.of<FinanceProvider>(context, listen: false);
+      final financeProvider =
+          Provider.of<FinanceProvider>(context, listen: false);
       await financeProvider.addExpense(title, amount, date);
 
       setState(() {
@@ -67,7 +68,6 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         _selectedCategory = 'Health';
       });
 
-      // Hide the success message after 3 seconds
       Future.delayed(Duration(seconds: 3), () {
         setState(() {
           _showSuccessMessage = false;
@@ -93,8 +93,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.pushReplacementNamed(
-                context, '/'); // Navigate to homepage
+            Navigator.pushReplacementNamed(context, '/');
           },
         ),
         actions: [
@@ -156,7 +155,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               GestureDetector(
                 onTap: () => _selectDate(context),
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+                  padding:
+                      EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(12.0),
@@ -178,7 +178,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               Form(
                 key: _formKey,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start, // Align text to the left
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextFormField(
                       controller: _titleController,
@@ -188,11 +188,13 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
+                          borderSide:
+                              BorderSide(color: Colors.blueAccent, width: 2.0),
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey[300]!, width: 1.0),
+                          borderSide:
+                              BorderSide(color: Colors.grey[300]!, width: 1.0),
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                       ),
@@ -215,11 +217,13 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
+                          borderSide:
+                              BorderSide(color: Colors.blueAccent, width: 2.0),
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey[300]!, width: 1.0),
+                          borderSide:
+                              BorderSide(color: Colors.grey[300]!, width: 1.0),
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         suffixIcon: Padding(
@@ -256,7 +260,6 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                         _buildCategoryButton('Health'),
                         SizedBox(width: 10),
                         _buildCategoryButton('Grocery'),
-                        // Add more categories here
                       ],
                     ),
                     SizedBox(height: 20),
@@ -273,12 +276,12 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                               : Text(
                                   'ADD EXPENSE',
                                   style: TextStyle(
-                                    color: Colors.white, // Set text color to white
+                                    color: Colors.white,
                                   ),
                                 ),
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(vertical: 15.0),
-                            backgroundColor: Colors.blueAccent, // Background color
+                            backgroundColor: Colors.blueAccent,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12.0),
                             ),

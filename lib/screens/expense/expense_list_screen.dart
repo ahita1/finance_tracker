@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/finance_provider.dart';
-import 'spend_item.dart'; // Import the SpendItem widget
+import 'spend_item.dart';
 
 class ExpenseListScreen extends StatefulWidget {
   @override
@@ -14,7 +14,8 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
   @override
   void initState() {
     super.initState();
-    _expensesFuture = Provider.of<FinanceProvider>(context, listen: false).fetchExpenses();
+    _expensesFuture =
+        Provider.of<FinanceProvider>(context, listen: false).fetchExpenses();
   }
 
   @override
@@ -26,7 +27,7 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-        backgroundColor: Colors.blueAccent, // Use a red accent for expenses
+        backgroundColor: Colors.blueAccent,
         iconTheme: IconThemeData(
           color: Colors.white,
         ),
@@ -39,7 +40,8 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No expense data available for this budget cycle'));
+            return Center(
+                child: Text('No expense data available for this budget cycle'));
           }
 
           final expenses = snapshot.data!;
@@ -49,17 +51,18 @@ class _ExpenseListScreenState extends State<ExpenseListScreen> {
             itemBuilder: (context, index) {
               final expense = expenses[index];
               final title = expense['title'] ?? 'No Title';
-              final amount = (expense['amount'] as double?)?.toStringAsFixed(2) ?? '0.00';
+              final amount =
+                  (expense['amount'] as double?)?.toStringAsFixed(2) ?? '0.00';
               final date = expense['date'] != null
                   ? DateTime.parse(expense['date']).toLocal()
                   : DateTime.now();
               final formattedDate = "${date.day}/${date.month}/${date.year}";
 
               return SpendItem(
-                icon: Icons.receipt_long, // Use the effective receipt icon
+                icon: Icons.receipt_long,
                 title: title,
                 date: formattedDate,
-                amount: 'ETB $amount', // Prefix with ETB
+                amount: 'ETB $amount',
               );
             },
           );

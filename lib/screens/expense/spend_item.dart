@@ -36,7 +36,7 @@ class SpendItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Icon(
-                Icons.receipt_long, // Effective icon for expenses
+                Icons.receipt_long,
                 color: Colors.white,
                 size: 40,
               ),

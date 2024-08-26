@@ -40,7 +40,8 @@ class _IncomeListScreenState extends State<IncomeListScreen> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No income data available for this budget cycle'));
+            return Center(
+                child: Text('No income data available for this budget cycle'));
           }
 
           final incomes = snapshot.data!;
@@ -65,7 +66,8 @@ class _IncomeListScreenState extends State<IncomeListScreen> {
     );
   }
 
-  Widget _buildIncomeCard(String title, String amount, String category, String date) {
+  Widget _buildIncomeCard(
+      String title, String amount, String category, String date) {
     return Card(
       margin: EdgeInsets.symmetric(vertical: 10.0),
       shape: RoundedRectangleBorder(
@@ -86,10 +88,17 @@ class _IncomeListScreenState extends State<IncomeListScreen> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(
-                Icons.attach_money,
-                color: Colors.white,
-                size: 40,
+              Container(
+                padding: EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.account_balance_wallet, 
+                  color: Colors.white,
+                  size: 40,
+                ),
               ),
               SizedBox(width: 16),
               Expanded(

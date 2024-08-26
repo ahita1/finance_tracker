@@ -52,7 +52,8 @@ class _GetStartBtnState extends State<GetStartBtn> {
                     ),
                   ),
                 )
-              : Text("Track Your Finance", style: widget.textTheme.headlineMedium),
+              : Text("Track Your Finance",
+                  style: widget.textTheme.headlineMedium),
         ),
       ),
     );

@@ -26,16 +26,16 @@ class BottomBar extends StatelessWidget {
       currentIndex: selectedIndex,
       onTap: onItemTapped,
       backgroundColor:
-          Colors.blueAccent, // Background color of the BottomNavigationBar
-      selectedItemColor: Colors.white, // Color of the selected item
-      unselectedItemColor: Colors.white70, // Color of the unselected items
+          Colors.blueAccent, 
+      selectedItemColor: Colors.white, 
+      unselectedItemColor: Colors.white70, 
       selectedLabelStyle: TextStyle(
-          fontWeight: FontWeight.bold), // Style for the selected label
+          fontWeight: FontWeight.bold),
       unselectedLabelStyle: TextStyle(
-          fontWeight: FontWeight.normal), // Style for unselected labels
-      elevation: 10, // Shadow depth for the BottomNavigationBar
+          fontWeight: FontWeight.normal), 
+      elevation: 10, 
       type: BottomNavigationBarType
-          .fixed, // Ensures that the bottom bar items are fixed
+          .fixed,
     );
   }
 }

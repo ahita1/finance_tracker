@@ -21,7 +21,6 @@ class DatabaseHelper {
 
 Future<Database> _initDatabase() async {
   String path = join(await getDatabasesPath(), 'finance_database.db');
-  print('Database path: $path'); // Debug statement
   final db = await openDatabase(
     path,
     onCreate: (db, version) async {
@@ -31,17 +30,16 @@ Future<Database> _initDatabase() async {
           'amount REAL, '
           'date TEXT, '
           'category TEXT, '
-          'budget_cycle TEXT);');  // Added budget_cycle
+          'budget_cycle TEXT);'); 
       await db.execute('CREATE TABLE expenses('
           'id INTEGER PRIMARY KEY AUTOINCREMENT, '
           'title TEXT, '
           'amount REAL, '
           'date TEXT, '
           'category TEXT, '
-          'budget_cycle TEXT);');  // Added budget_cycle
-      print('Tables created'); // Debug statement
+          'budget_cycle TEXT);');  
     },
-    version: 2, // Update the version number to trigger onUpgrade
+    version: 2, 
     onUpgrade: (db, oldVersion, newVersion) async {
       if (oldVersion < 2) {
         await db.execute('ALTER TABLE incomes ADD COLUMN budget_cycle TEXT;');
@@ -49,7 +47,6 @@ Future<Database> _initDatabase() async {
       }
     },
   );
-  print('Database initialized'); // Debug statement
   return db;
 }
 
