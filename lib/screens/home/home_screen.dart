@@ -167,22 +167,26 @@ class _ExpensePageState extends State<ExpensePage> {
                       FutureBuilder<Map<String, double>>(
                         future: _convertedBalancesFuture,
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return Center(
                               child: CircularProgressIndicator(),
                             );
                           } else if (snapshot.hasError) {
                             return Center(
-                              child: Text('Failed to load currency conversion data'),
+                              child: Text(
+                                  'Failed to load currency conversion data'),
                             );
-                          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          } else if (!snapshot.hasData ||
+                              snapshot.data!.isEmpty) {
                             return Center(
                               child: Text('No conversion data available'),
                             );
                           } else {
                             final convertedBalances = snapshot.data!;
                             return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 12.0),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 12.0),
                               child: GridView.count(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
@@ -190,7 +194,8 @@ class _ExpensePageState extends State<ExpensePage> {
                                 crossAxisSpacing: 12,
                                 mainAxisSpacing: 12,
                                 childAspectRatio: 4 / 3,
-                                children: _buildCurrencyConversionCards(convertedBalances),
+                                children: _buildCurrencyConversionCards(
+                                    convertedBalances),
                               ),
                             );
                           }
@@ -340,8 +345,6 @@ class _ExpensePageState extends State<ExpensePage> {
       );
     }).toList();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
