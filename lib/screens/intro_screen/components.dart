@@ -9,28 +9,24 @@ class GetStartBtn extends StatefulWidget {
     required this.size,
     required this.textTheme,
   }) : super(key: key);
-
   final Size size;
   final TextTheme textTheme;
-
   @override
   State<GetStartBtn> createState() => _GetStartBtnState();
 }
 
 class _GetStartBtnState extends State<GetStartBtn> {
   bool isLoading = false;
-
   loadingHandler() {
     setState(() {
       isLoading = true;
       Future.delayed(const Duration(seconds: 2)).then((value) {
         isLoading = false;
         Navigator.pushReplacement(
-            context, CupertinoPageRoute(builder: (_) => ExpenseApp()));
+            context, CupertinoPageRoute(builder: (_) => HomeScreen()));
       });
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

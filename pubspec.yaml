@@ -1,7 +1,6 @@
 name: finance_tracker
-description: "A new Flutter project to track finances including income and expenses."
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-
+description: "A Flutter project to track finances including income and expenses."
+publish_to: 'none'
 version: 1.0.0+1
 
 environment:
@@ -10,15 +9,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # sqflite: ^2.0.0+4
-  # sqflite_common_ffi: ^2.3.3  # Downgraded version
   sqflite_common_ffi: ^2.1.0
   google_fonts: ^4.0.0
   sqflite: ^2.0.0+4
   path: ^1.8.3
   path_provider: ^2.0.11
-  http: ^1.2.2  # Updated version
-  provider: ^6.1.2 # Updated to a compatible version
+  http: ^1.2.2
+  provider: ^6.1.2
   cupertino_icons: ^1.0.2
   animate_do : any
   smooth_page_indicator: ^1.0.0+2
@@ -28,14 +25,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  # Add other dev dependencies like linting or code formatting tools if needed
 
 flutter:
   uses-material-design: true
-
-  # Uncomment and list any assets you want to include in your app here
-  # assets:
-  #   - assets/images/
-  #   - assets/icons/
   assets:
     - assets/

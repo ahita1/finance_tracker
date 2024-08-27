@@ -44,7 +44,7 @@ class BottomBar extends StatelessWidget {
             ),
             BottomNavigationBarItem(
               icon: FaIcon(
-                FontAwesomeIcons.shoppingCart,
+                FontAwesomeIcons.cartShopping,
                 size: 28,
               ),
               label: 'Expenses',

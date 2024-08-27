@@ -25,15 +25,22 @@ class FinanceProvider with ChangeNotifier {
     return "${now.year}-${now.month}";
   }
 
-  Future<List<Map<String, dynamic>>> fetchIncomes() async {
+  Future<List<Map<String, dynamic>>> fetchIncomes({int limit = 10, int offset = 0}) async {
     try {
       final db = await DatabaseHelper().database;
       final List<Map<String, dynamic>> incomeData = await db.query(
         'incomes',
         where: 'budget_cycle = ?',
         whereArgs: [_currentCycle],
+        orderBy: 'date DESC', // Order by date in descending order
+        limit: limit,
+        offset: offset,
       );
-      _incomes = incomeData;
+      if (offset == 0) {
+        _incomes = incomeData;
+      } else {
+        _incomes.addAll(incomeData);
+      }
       _totalIncome =
           _incomes.fold(0, (sum, item) => sum + (item['amount'] as double));
       notifyListeners();
@@ -43,16 +50,22 @@ class FinanceProvider with ChangeNotifier {
     }
   }
 
-  // Fetch expenses for the current budget cycle
-  Future<List<Map<String, dynamic>>> fetchExpenses() async {
+  Future<List<Map<String, dynamic>>> fetchExpenses({int limit = 10, int offset = 0}) async {
     try {
       final db = await DatabaseHelper().database;
       final List<Map<String, dynamic>> expenseData = await db.query(
         'expenses',
         where: 'budget_cycle = ?',
         whereArgs: [_currentCycle],
+        orderBy: 'date DESC', // Order by date in descending order
+        limit: limit,
+        offset: offset,
       );
-      _expenses = expenseData;
+      if (offset == 0) {
+        _expenses = expenseData;
+      } else {
+        _expenses.addAll(expenseData);
+      }
       _totalExpenses =
           _expenses.fold(0, (sum, item) => sum + (item['amount'] as double));
       notifyListeners();
@@ -62,7 +75,6 @@ class FinanceProvider with ChangeNotifier {
     }
   }
 
-  // Add a new income with the current budget cycle
   Future<void> addIncome(
       String title, double amount, DateTime date, String category) async {
     final db = await DatabaseHelper().database;
@@ -71,10 +83,9 @@ class FinanceProvider with ChangeNotifier {
       'amount': amount,
       'date': date.toIso8601String(),
       'category': category,
-      'budget_cycle': _currentCycle, // Store the current budget cycle
+      'budget_cycle': _currentCycle,
     });
-    await fetchIncomes();
-    notifyListeners();
+    await fetchIncomes(); // Re-fetch incomes after adding a new one
   }
 
   Future<void> addExpense(String title, double amount, DateTime date) async {
@@ -83,13 +94,11 @@ class FinanceProvider with ChangeNotifier {
       'title': title,
       'amount': amount,
       'date': date.toIso8601String(),
-      'budget_cycle': _currentCycle, // Store the current budget cycle
+      'budget_cycle': _currentCycle,
     });
-    await fetchExpenses(); // Refresh the list after adding
-    notifyListeners(); // Notify listeners to update balance
+    await fetchExpenses(); // Re-fetch expenses after adding a new one
   }
 
-  // Start a new budget cycle (typically called at the beginning of a new month)
   Future<void> startNewBudgetCycle() async {
     _currentCycle = _getCurrentBudgetCycle(); // Update the current budget cycle
     await fetchIncomes();
@@ -101,12 +110,10 @@ class FinanceProvider with ChangeNotifier {
     return rates;
   }
 
-  // Converts the balance to other currencies based on conversion rates
   Future<Map<String, double>> convertBalanceToCurrencies() async {
     final conversionRates = await getConversionRates();
-    final balanceInEtb = this.balance; // Balance is in ETB
+    final balanceInEtb = this.balance;
 
-    // Convert ETB to other currencies
     return {
       'EUR': _currencyService.convertAmount(
           balanceInEtb, conversionRates['EUR'] ?? 0.0),

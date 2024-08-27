@@ -9,12 +9,12 @@ void main() {
   runApp(
     ChangeNotifierProvider(
       create: (context) => FinanceProvider(),
-      child: ExpenseApp(),
+      child: HomeScreen(),
     ),
   );
 }
 
-class ExpenseApp extends StatelessWidget {
+class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -32,26 +32,25 @@ class ExpensePage extends StatefulWidget {
 
 class _ExpensePageState extends State<ExpensePage> {
   int _selectedIndex = 1;
-
   Future<Map<String, double>>? _convertedBalancesFuture;
-
   final List<Widget> _pages = [];
+  late FinanceProvider _financeProvider;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _financeProvider = Provider.of<FinanceProvider>(context, listen: false);
+    _financeProvider.addListener(_onFinanceDataChanged);
+
+    // Initialize pages after FinanceProvider is obtained
     _pages.addAll([
       AddIncomeScreen(),
       _buildHomePage(),
       AddExpenseScreen(),
     ]);
 
-    final financeProvider =
-        Provider.of<FinanceProvider>(context, listen: false);
-    financeProvider.addListener(_onFinanceDataChanged);
-
-    financeProvider.fetchIncomes();
-    financeProvider.fetchExpenses();
+    _financeProvider.fetchIncomes();
+    _financeProvider.fetchExpenses();
 
     _fetchAndUpdateConvertedBalances();
   }
@@ -67,16 +66,12 @@ class _ExpensePageState extends State<ExpensePage> {
   }
 
   Future<Map<String, double>> _fetchConvertedBalances() async {
-    final financeProvider =
-        Provider.of<FinanceProvider>(context, listen: false);
-    return await financeProvider.convertBalanceToCurrencies();
+    return await _financeProvider.convertBalanceToCurrencies();
   }
 
   @override
   void dispose() {
-    final financeProvider =
-        Provider.of<FinanceProvider>(context, listen: false);
-    financeProvider.removeListener(_onFinanceDataChanged);
+    _financeProvider.removeListener(_onFinanceDataChanged);
     super.dispose();
   }
 
@@ -133,12 +128,11 @@ class _ExpensePageState extends State<ExpensePage> {
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                           color: Colors.blueGrey[800],
-                          letterSpacing: 1.2, // Slightly increase letter spacing for clarity
+                          letterSpacing: 1.2,
                         ),
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 10),
-                    
                       SizedBox(height: 20),
                       Container(
                         width: 140,
@@ -194,7 +188,7 @@ class _ExpensePageState extends State<ExpensePage> {
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 12,
                                 mainAxisSpacing: 12,
-                                childAspectRatio: 4 / 3, // Adjusted aspect ratio
+                                childAspectRatio: 4 / 3,
                                 children: _buildCurrencyConversionCards(convertedBalances),
                               ),
                             );
@@ -306,36 +300,36 @@ class _ExpensePageState extends State<ExpensePage> {
             ),
           ],
         ),
-        padding: EdgeInsets.all(8), // Reduced padding to prevent overflow
+        padding: EdgeInsets.all(8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CircleAvatar(
-              radius: 18, // Adjusted radius
+              radius: 18,
               backgroundColor: Colors.white.withOpacity(0.8),
               child: Text(
                 symbol,
                 style: TextStyle(
-                  fontSize: 18, // Adjusted font size
+                  fontSize: 18,
                   color: Colors.blueGrey[800],
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            SizedBox(height: 8), // Adjusted spacing
+            SizedBox(height: 8),
             Text(
               '$currencyCode Balance',
               style: TextStyle(
-                fontSize: 14, // Adjusted font size
+                fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
               ),
             ),
-            SizedBox(height: 4), // Adjusted spacing
+            SizedBox(height: 4),
             Text(
               '$symbol${value.toStringAsFixed(2)}',
               style: TextStyle(
-                fontSize: 16, // Adjusted font size
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),

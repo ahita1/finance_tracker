@@ -11,31 +11,15 @@ import 'screens/home/home_screen.dart';
 import 'screens/intro_screen/home_page.dart';
 
 void main() async {
-  // Ensure that the Flutter framework is initialized
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialize database settings for desktop platforms
   if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
   }
-
-  // Initialize the database helper
   final dbHelper = DatabaseHelper();
-
-  // Optionally delete the existing database (for development/debugging purposes)
-  // Uncomment if you need to delete the database on mobile platforms
-  // if (Platform.isAndroid || Platform.isIOS) {
-  //   await dbHelper.deleteDatabase();
-  // }
-
-  // Ensure the database is initialized
   await dbHelper.database;
-
-  // Run the app
   runApp(MyApp());
 }
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -50,24 +34,23 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
           appBarTheme: AppBarTheme(
             backgroundColor:
-                Colors.blueAccent, // Background color of the AppBar
-            elevation: 4, // Elevation for shadow effect
+                Colors.blueAccent, 
+            elevation: 4, 
             titleTextStyle: TextStyle(
-              color: Colors.white, // Color of the AppBar title
-              fontSize: 20, // Font size of the AppBar title
-              fontWeight: FontWeight.bold, // Font weight of the AppBar title
+              color: Colors.white, 
+              fontWeight: FontWeight.bold, 
             ),
             iconTheme: IconThemeData(
-              color: Colors.white, // Color of the AppBar icons
+              color: Colors.white, 
             ),
           ),
         ),
         debugShowCheckedModeBanner:
-            false, // Add this line to remove the DEBUG banner
-        initialRoute: '/', // Set the initial route to the HomeScreen
+            false, 
+        initialRoute: '/', 
         routes: {
-          '/': (context) => HomePage(),
-          '/expp': (context) => ExpenseApp(),
+          '/': (context) => IntoScreen(),
+          '/expp': (context) => HomeScreen(),
           '/income': (context) => AddIncomeScreen(),
           '/expense': (context) => AddExpenseScreen(),
           '/viewexpenses': (context) => ExpenseListScreen(),

@@ -1,19 +1,18 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
 import '../../model/items_model.dart';
 import '../../utils/colors.dart';
 import 'components.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class IntoScreen extends StatefulWidget {
+  const IntoScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<IntoScreen> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<IntoScreen> {
   PageController pageController = PageController(initialPage: 0);
   int currentIndex = 0;
 
@@ -63,38 +62,50 @@ class _HomePageState extends State<HomePage> {
                 },
                 physics: const BouncingScrollPhysics(),
                 itemBuilder: (context, index) {
-                  return SizedBox(
-                    width: size.width,
-                    height: size.height,
-                    child: Column(
-                      children: [
-                        /// Image
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(15, 40, 15, 10),
-                          width: size.width,
-                          height: size.height / 2.5,
-                          child: animationDo(
-                            index,
-                            100,
-                            Image.asset(listOfItems[index].img),
-                          ),
-                        ),
-
-                        /// Title Text
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 10),
-                          child: animationDo(
-                            index,
-                            100,
-                            Text(
-                              listOfItems[index].title,
-                              textAlign: TextAlign.center,
-                              style: textTheme.displayLarge,
+                  return Stack(
+                    children: [
+                      SizedBox(
+                        width: size.width,
+                        height: size.height,
+                        child: Column(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(15, 40, 15, 10),
+                              width: size.width,
+                              height: size.height / 2.5,
+                              child: animationDo(
+                                index,
+                                100,
+                                Image.asset(listOfItems[index].img),
+                              ),
                             ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10, bottom: 10),
+                              child: animationDo(
+                                index,
+                                100,
+                                Text(
+                                  listOfItems[index].title,
+                                  textAlign: TextAlign.center,
+                                  style: textTheme.displayLarge,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0), // Adjust the padding as needed
+                          child: Image.asset(
+                            'assets/logo_0.png',
+                            width: 100, // Increase the width as needed
+                            height: 100, // Increase the height as needed
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   );
                 },
               ),
@@ -127,8 +138,6 @@ class _HomePageState extends State<HomePage> {
                       });
                     },
                   ),
-
-                  /// Conditional Buttons
                   currentIndex == 3
                       ? GetStartBtn(size: size, textTheme: textTheme)
                       : SkipBtn(
@@ -137,7 +146,7 @@ class _HomePageState extends State<HomePage> {
                           onTap: () {
                             setState(() {
                               pageController.animateToPage(
-                                2,
+                                3,
                                 duration: const Duration(milliseconds: 1000),
                                 curve: Curves.fastOutSlowIn,
                               );
