@@ -12,6 +12,12 @@ class Items {
 }
 
 List<Items> listOfItems = [
+   Items(
+    img: "assets/4.png",
+    title: "Welcome To Horra",
+    subTitle:
+        "There are 25.000+ best medical\njobs and schools, choose your\nchoice now",
+  ),
   Items(
     img: "assets/1.png",
     title: "Want To Track Your Incomes!",

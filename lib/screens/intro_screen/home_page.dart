@@ -82,10 +82,10 @@ class _HomePageState extends State<HomePage> {
 
                         /// Title Text
                         Padding(
-                          padding: const EdgeInsets.only(top: 25, bottom: 15),
+                          padding: const EdgeInsets.only(top: 10, bottom: 10),
                           child: animationDo(
                             index,
-                            300,
+                            100,
                             Text(
                               listOfItems[index].title,
                               textAlign: TextAlign.center,
@@ -129,7 +129,7 @@ class _HomePageState extends State<HomePage> {
                   ),
 
                   /// Conditional Buttons
-                  currentIndex == 2
+                  currentIndex == 3
                       ? GetStartBtn(size: size, textTheme: textTheme)
                       : SkipBtn(
                           size: size,

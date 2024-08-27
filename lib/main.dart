@@ -8,7 +8,7 @@ import 'providers/finance_provider.dart';
 import 'screens/income/income_screen.dart';
 import 'screens/expense/expense_screen.dart';
 import 'screens/home/home_screen.dart';
-import 'screens/home/home_page.dart';
+import 'screens/intro_screen/home_page.dart';
 
 void main() async {
   // Ensure that the Flutter framework is initialized

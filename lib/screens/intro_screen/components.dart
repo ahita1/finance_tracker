@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../utils/colors.dart';
-import 'home_screen.dart';
+import '../home/home_screen.dart';
 
 class GetStartBtn extends StatefulWidget {
   const GetStartBtn({
@@ -42,19 +42,22 @@ class _GetStartBtnState extends State<GetStartBtn> {
         decoration: BoxDecoration(
             color: MyColors.btnColor, borderRadius: BorderRadius.circular(15)),
         child: Center(
-          child: isLoading
-              ? const Center(
-                  child: SizedBox(
-                    width: 30,
-                    height: 30,
-                    child: CircularProgressIndicator(
+            child: isLoading
+                ? const Center(
+                    child: SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
+                : Text(
+                    "Track It Here",
+                    style: widget.textTheme.headlineMedium?.copyWith(
                       color: Colors.white,
                     ),
-                  ),
-                )
-              : Text("Track Your Finance",
-                  style: widget.textTheme.headlineMedium),
-        ),
+                  )),
       ),
     );
   }

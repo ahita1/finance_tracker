@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:finance_tracker/providers/finance_provider.dart';
-import 'try.dart';
+import 'income_list.dart';
 
 class AddIncomeScreen extends StatefulWidget {
   @override

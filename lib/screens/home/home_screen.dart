@@ -128,14 +128,17 @@ class _ExpensePageState extends State<ExpensePage> {
                       ),
                       SizedBox(height: 30),
                       Text(
-                        'Total Balance You Have',
+                        'Your Remaining Balance',
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                           color: Colors.blueGrey[800],
+                          letterSpacing: 1.2, // Slightly increase letter spacing for clarity
                         ),
                         textAlign: TextAlign.center,
                       ),
+                      SizedBox(height: 10),
+                    
                       SizedBox(height: 20),
                       Container(
                         width: 140,
@@ -169,35 +172,30 @@ class _ExpensePageState extends State<ExpensePage> {
                       FutureBuilder<Map<String, double>>(
                         future: _convertedBalancesFuture,
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
                             return Center(
                               child: CircularProgressIndicator(),
                             );
                           } else if (snapshot.hasError) {
                             return Center(
-                              child: Text(
-                                  'Failed to load currency conversion data'),
+                              child: Text('Failed to load currency conversion data'),
                             );
-                          } else if (!snapshot.hasData ||
-                              snapshot.data!.isEmpty) {
+                          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                             return Center(
                               child: Text('No conversion data available'),
                             );
                           } else {
                             final convertedBalances = snapshot.data!;
                             return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 12.0),
+                              padding: const EdgeInsets.symmetric(vertical: 12.0),
                               child: GridView.count(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 12,
                                 mainAxisSpacing: 12,
-                                childAspectRatio: 3 / 2,
-                                children: _buildCurrencyConversionCards(
-                                    convertedBalances),
+                                childAspectRatio: 4 / 3, // Adjusted aspect ratio
+                                children: _buildCurrencyConversionCards(convertedBalances),
                               ),
                             );
                           }
@@ -308,36 +306,36 @@ class _ExpensePageState extends State<ExpensePage> {
             ),
           ],
         ),
-        padding: EdgeInsets.all(12),
+        padding: EdgeInsets.all(8), // Reduced padding to prevent overflow
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CircleAvatar(
-              radius: 20,
+              radius: 18, // Adjusted radius
               backgroundColor: Colors.white.withOpacity(0.8),
               child: Text(
                 symbol,
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 18, // Adjusted font size
                   color: Colors.blueGrey[800],
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            SizedBox(height: 12),
+            SizedBox(height: 8), // Adjusted spacing
             Text(
               '$currencyCode Balance',
               style: TextStyle(
-                fontSize: 15,
+                fontSize: 14, // Adjusted font size
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
               ),
             ),
-            SizedBox(height: 6),
+            SizedBox(height: 4), // Adjusted spacing
             Text(
               '$symbol${value.toStringAsFixed(2)}',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 16, // Adjusted font size
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),

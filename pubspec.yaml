@@ -13,6 +13,7 @@ dependencies:
   # sqflite: ^2.0.0+4
   # sqflite_common_ffi: ^2.3.3  # Downgraded version
   sqflite_common_ffi: ^2.1.0
+  google_fonts: ^4.0.0
   sqflite: ^2.0.0+4
   path: ^1.8.3
   path_provider: ^2.0.11
@@ -22,6 +23,7 @@ dependencies:
   animate_do : any
   smooth_page_indicator: ^1.0.0+2
   intl: ^0.19.0
+  font_awesome_flutter: ^10.7.0
 
 dev_dependencies:
   flutter_test:
