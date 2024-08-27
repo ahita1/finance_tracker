@@ -11,7 +11,7 @@ class Items {
 List<Items> listOfItems = [
    Items(
     img: "assets/1.png",
-    title: "Welcome To Horra",
+    title: "Welcome To Horra Trading",
     subTitle:
         "There are 25.000+ best medical\njobs and schools, choose your\nchoice now",
   ),

@@ -20,6 +20,7 @@ void main() async {
   await dbHelper.database;
   runApp(MyApp());
 }
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -33,21 +34,35 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           appBarTheme: AppBarTheme(
-            backgroundColor:
-                Colors.blueAccent, 
-            elevation: 4, 
+            backgroundColor: Colors.blueAccent,
+            elevation: 4,
             titleTextStyle: TextStyle(
-              color: Colors.white, 
-              fontWeight: FontWeight.bold, 
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Roboto', // Apply the Google Font here
             ),
             iconTheme: IconThemeData(
-              color: Colors.white, 
+              color: Colors.white,
             ),
           ),
+          textTheme: TextTheme(
+            bodyLarge: TextStyle(
+              fontFamily: 'Roboto', // Apply the Google Font to bodyText1
+            ),
+            bodyMedium: TextStyle(
+              fontFamily: 'Roboto', // Apply the Google Font to bodyText2
+            ),
+            displayLarge: TextStyle(
+              fontFamily: 'Roboto', // Apply the Google Font to headline1
+            ),
+            displayMedium: TextStyle(
+              fontFamily: 'Roboto', // Apply the Google Font to headline2
+            ),
+            // Add other text styles as needed
+          ),
         ),
-        debugShowCheckedModeBanner:
-            false, 
-        initialRoute: '/', 
+        debugShowCheckedModeBanner: false,
+        initialRoute: '/',
         routes: {
           '/': (context) => IntoScreen(),
           '/expp': (context) => HomeScreen(),

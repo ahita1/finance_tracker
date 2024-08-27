@@ -128,6 +128,7 @@ class _ExpensePageState extends State<ExpensePage> {
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                           color: Colors.blueGrey[800],
+                          fontFamily: 'Roboto', // Apply the Google Font here
                           letterSpacing: 1.2,
                         ),
                         textAlign: TextAlign.center,
@@ -339,6 +340,8 @@ class _ExpensePageState extends State<ExpensePage> {
       );
     }).toList();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
