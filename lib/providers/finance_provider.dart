@@ -20,9 +20,18 @@ class FinanceProvider with ChangeNotifier {
   List<Map<String, dynamic>> get expenses => _expenses;
   String get currentCycle => _currentCycle;
 
+  // Determine if the current budget cycle matches the system date
+  bool get isCurrentCycle => _currentCycle == _getCurrentBudgetCycle();
+
   static String _getCurrentBudgetCycle() {
     final now = DateTime.now();
-    return "${now.year}-${now.month}";
+    return "${now.year}-${now.month.toString().padLeft(2, '0')}";
+  }
+
+  Future<void> setBudgetCycle(String cycle) async {
+    _currentCycle = cycle;
+    await fetchIncomes();
+    await fetchExpenses();
   }
 
   Future<List<Map<String, dynamic>>> fetchIncomes({int limit = 10, int offset = 0}) async {

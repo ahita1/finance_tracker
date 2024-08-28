@@ -29,7 +29,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _selectedDate,
-      firstDate: DateTime(2000),
+      firstDate: DateTime(DateTime.now().year, DateTime.now().month, 1),
       lastDate: DateTime.now(),
     );
     if (picked != null && picked != _selectedDate) {
@@ -62,9 +62,10 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
       isValid = false;
     }
 
-    if (_selectedDate.isAfter(DateTime.now())) {
+    final now = DateTime.now();
+    if (_selectedDate.year != now.year || _selectedDate.month != now.month) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Selected date cannot be in the future')),
+        SnackBar(content: Text('You can only add income for the current month')),
       );
       isValid = false;
     }
@@ -117,6 +118,9 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final financeProvider = Provider.of<FinanceProvider>(context);
+    final bool isCurrentCycle = financeProvider.isCurrentCycle;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -184,7 +188,7 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
               ),
               SizedBox(height: 20),
               GestureDetector(
-                onTap: () => _selectDate(context),
+                onTap: isCurrentCycle ? () => _selectDate(context) : null,
                 child: Container(
                   padding:
                       EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
@@ -266,32 +270,44 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
               SizedBox(height: 10),
               Row(
                 children: [
-                  _buildCategoryButton('Salary'),
+                  _buildCategoryButton('Salary', isCurrentCycle),
                   SizedBox(width: 10),
-                  _buildCategoryButton('Rewards'),
-                  // Add more categories if needed
+                  _buildCategoryButton('Rewards', isCurrentCycle),
                 ],
               ),
               SizedBox(height: 20),
+              if (!isCurrentCycle)
+                Center(
+                  child: Text(
+                    'You can only add income for the current budget cycle.',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               Center(
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: _isSubmitting ? null : _addIncome,
+                    onPressed: isCurrentCycle ? (_isSubmitting ? null : _addIncome) : null,
                     child: _isSubmitting
                         ? CircularProgressIndicator(
                             valueColor:
                                 AlwaysStoppedAnimation<Color>(Colors.white),
                           )
                         : Text(
-                            'ADD INCOME',
+                            'Add Income',
                             style: TextStyle(
-                              color: Colors.white, // Set text color to white
+                              color: Colors.white,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 15.0),
-                      backgroundColor: Colors.blueAccent, // Background color
+                      padding: EdgeInsets.symmetric(vertical: 16.0), backgroundColor: isCurrentCycle
+                          ? Colors.blueAccent
+                          : Colors.grey, // Disable button if not current cycle
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12.0),
                       ),
@@ -306,27 +322,27 @@ class _AddIncomeScreenState extends State<AddIncomeScreen> {
     );
   }
 
-  Widget _buildCategoryButton(String category) {
-    bool isSelected = _selectedCategory == category;
-
+  Widget _buildCategoryButton(String category, bool isEnabled) {
     return GestureDetector(
-      onTap: () {
+      onTap: isEnabled ? () {
         setState(() {
           _selectedCategory = category;
         });
-      },
+      } : null,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.blueAccent : Colors.grey[300],
+          color: _selectedCategory == category
+              ? Colors.blueAccent
+              : Colors.grey[300],
           borderRadius: BorderRadius.circular(12.0),
         ),
         child: Text(
           category,
           style: TextStyle(
+            color: _selectedCategory == category ? Colors.white : Colors.black,
             fontSize: 16.0,
             fontWeight: FontWeight.bold,
-            color: isSelected ? Colors.white : Colors.black,
           ),
         ),
       ),

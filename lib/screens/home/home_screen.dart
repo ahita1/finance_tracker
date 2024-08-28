@@ -4,6 +4,7 @@ import '../../providers/finance_provider.dart';
 import 'bottom_bar.dart';
 import '../income/income_screen.dart';
 import '../expense/expense_screen.dart';
+import 'package:intl/intl.dart';
 
 void main() {
   runApp(
@@ -42,7 +43,6 @@ class _ExpensePageState extends State<ExpensePage> {
     _financeProvider = Provider.of<FinanceProvider>(context, listen: false);
     _financeProvider.addListener(_onFinanceDataChanged);
 
-    // Initialize pages after FinanceProvider is obtained
     _pages.addAll([
       AddIncomeScreen(),
       _buildHomePage(),
@@ -81,6 +81,25 @@ class _ExpensePageState extends State<ExpensePage> {
     });
   }
 
+  Future<void> _pickYearMonth(BuildContext context) async {
+    DateTime now = DateTime.now();
+    DateTime firstDayOfMonth = DateTime(now.year, now.month, 1);
+
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: firstDayOfMonth,
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+      helpText: "Select Year and Month",
+      selectableDayPredicate: (DateTime val) => val.day == 1,
+    );
+
+    if (pickedDate != null) {
+      final String selectedCycle = "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}";
+      _financeProvider.setBudgetCycle(selectedCycle);
+    }
+  }
+
   Widget _buildHomePage() {
     return Consumer<FinanceProvider>(
       builder: (context, financeProvider, child) {
@@ -98,6 +117,24 @@ class _ExpensePageState extends State<ExpensePage> {
                   padding: EdgeInsets.all(2),
                   child: Column(
                     children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.calendar_today),
+                            onPressed: () => _pickYearMonth(context),
+                          ),
+                          Text(
+                            'Budget Cycle: ${financeProvider.currentCycle}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blueGrey[800],
+                            ),
+                          ),
+                          SizedBox(width: 48),
+                        ],
+                      ),
                       Row(
                         children: [
                           Expanded(
@@ -128,7 +165,7 @@ class _ExpensePageState extends State<ExpensePage> {
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                           color: Colors.blueGrey[800],
-                          fontFamily: 'Roboto', // Apply the Google Font here
+                          fontFamily: 'Roboto',
                           letterSpacing: 1.2,
                         ),
                         textAlign: TextAlign.center,
@@ -167,26 +204,22 @@ class _ExpensePageState extends State<ExpensePage> {
                       FutureBuilder<Map<String, double>>(
                         future: _convertedBalancesFuture,
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
                             return Center(
                               child: CircularProgressIndicator(),
                             );
                           } else if (snapshot.hasError) {
                             return Center(
-                              child: Text(
-                                  'Failed to load currency conversion data'),
+                              child: Text('Failed to load currency conversion data'),
                             );
-                          } else if (!snapshot.hasData ||
-                              snapshot.data!.isEmpty) {
+                          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                             return Center(
                               child: Text('No conversion data available'),
                             );
                           } else {
                             final convertedBalances = snapshot.data!;
                             return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 12.0),
+                              padding: const EdgeInsets.symmetric(vertical: 12.0),
                               child: GridView.count(
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
@@ -194,8 +227,7 @@ class _ExpensePageState extends State<ExpensePage> {
                                 crossAxisSpacing: 12,
                                 mainAxisSpacing: 12,
                                 childAspectRatio: 4 / 3,
-                                children: _buildCurrencyConversionCards(
-                                    convertedBalances),
+                                children: _buildCurrencyConversionCards(convertedBalances),
                               ),
                             );
                           }

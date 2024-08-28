@@ -9,12 +9,13 @@ class AddExpenseScreen extends StatefulWidget {
 }
 
 class _AddExpenseScreenState extends State<AddExpenseScreen> {
-  final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
   String _selectedCategory = 'Health';
   bool _isSubmitting = false;
+  String? _titleError;
+  String? _amountError;
   bool _showSuccessMessage = false;
 
   @override
@@ -28,7 +29,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _selectedDate,
-      firstDate: DateTime(2000),
+      firstDate: DateTime(DateTime.now().year, DateTime.now().month, 1),
       lastDate: DateTime.now(),
     );
     if (picked != null && picked != _selectedDate) {
@@ -38,18 +39,50 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     }
   }
 
-  void _addExpense() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
+  bool _validateFields() {
+    setState(() {
+      _titleError = null;
+      _amountError = null;
+    });
+
+    bool isValid = true;
+
+    if (_titleController.text.isEmpty || _titleController.text.length < 3) {
+      setState(() {
+        _titleError = 'Title must be at least 3 characters long';
+      });
+      isValid = false;
     }
 
-    final String title = _titleController.text;
-    final double amount = double.parse(_amountController.text);
-    final DateTime date = _selectedDate;
+    final double? amount = double.tryParse(_amountController.text);
+    if (amount == null || amount <= 0) {
+      setState(() {
+        _amountError = 'Please enter a valid positive amount';
+      });
+      isValid = false;
+    }
+
+    final now = DateTime.now();
+    if (_selectedDate.year != now.year || _selectedDate.month != now.month) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('You can only add expenses for the current month')),
+      );
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  void _addExpense() async {
+    if (!_validateFields()) return;
 
     setState(() {
       _isSubmitting = true;
     });
+
+    final String title = _titleController.text;
+    final double amount = double.parse(_amountController.text);
+    final DateTime date = _selectedDate;
 
     try {
       final financeProvider =
@@ -85,6 +118,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final financeProvider = Provider.of<FinanceProvider>(context);
+    final bool isCurrentCycle = financeProvider.isCurrentCycle;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -105,7 +141,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             },
             child: Text(
               'View Expenses',
-              style: TextStyle(color: Colors.blue, fontSize: 16.0),
+              style: TextStyle(color: Colors.blueAccent, fontSize: 16.0),
             ),
           ),
         ],
@@ -152,7 +188,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               ),
               SizedBox(height: 20),
               GestureDetector(
-                onTap: () => _selectDate(context),
+                onTap: isCurrentCycle ? () => _selectDate(context) : null,
                 child: Container(
                   padding:
                       EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
@@ -174,121 +210,110 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 ),
               ),
               SizedBox(height: 20),
-              Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextFormField(
-                      controller: _titleController,
-                      decoration: InputDecoration(
-                        labelText: 'Expense Title',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.blueAccent, width: 2.0),
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.grey[300]!, width: 1.0),
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
+              TextField(
+                controller: _titleController,
+                decoration: InputDecoration(
+                  labelText: 'Expense Title',
+                  errorText: _titleError,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Colors.blueAccent, width: 2.0),
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Colors.grey[300]!, width: 1.0),
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              TextField(
+                controller: _amountController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'Amount',
+                  errorText: _amountError,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Colors.blueAccent, width: 2.0),
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Colors.grey[300]!, width: 1.0),
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  suffixIcon: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Text(
+                      '\$',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a title';
-                        } else if (value.length < 3) {
-                          return 'Title must be at least 3 characters long';
-                        }
-                        return null;
-                      },
                     ),
-                    SizedBox(height: 20),
-                    TextFormField(
-                      controller: _amountController,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        labelText: 'Amount',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.blueAccent, width: 2.0),
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.grey[300]!, width: 1.0),
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        suffixIcon: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Text(
-                            '\$',
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              Text(
+                'Expense Category',
+                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  _buildCategoryButton('Health', isCurrentCycle),
+                  SizedBox(width: 10),
+                  _buildCategoryButton('Grocery', isCurrentCycle),
+                ],
+              ),
+              SizedBox(height: 20),
+              if (!isCurrentCycle)
+                Center(
+                  child: Text(
+                    'You can only add expenses for the current budget cycle.',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              Center(
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: isCurrentCycle ? (_isSubmitting ? null : _addExpense) : null,
+                    child: _isSubmitting
+                        ? CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          )
+                        : Text(
+                            'Add Expense',
                             style: TextStyle(
-                              fontSize: 18.0,
+                              color: Colors.white,
+                              fontSize: 16.0,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter an amount';
-                        }
-                        final double? amount = double.tryParse(value);
-                        if (amount == null || amount <= 0) {
-                          return 'Please enter a valid positive amount';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 20),
-                    Text(
-                      'Expense Category',
-                      style: TextStyle(
-                          fontSize: 16.0, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      children: [
-                        _buildCategoryButton('Health'),
-                        SizedBox(width: 10),
-                        _buildCategoryButton('Grocery'),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Center(
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: _isSubmitting ? null : _addExpense,
-                          child: _isSubmitting
-                              ? CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white),
-                                )
-                              : Text(
-                                  'ADD EXPENSE',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 15.0),
-                            backgroundColor: Colors.blueAccent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                          ),
-                        ),
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 16.0),
+                      backgroundColor: isCurrentCycle
+                          ? Colors.blueAccent
+                          : Colors.grey, // Disable button if not current cycle
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ),
             ],
@@ -298,27 +323,27 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     );
   }
 
-  Widget _buildCategoryButton(String category) {
-    bool isSelected = _selectedCategory == category;
-
+  Widget _buildCategoryButton(String category, bool isEnabled) {
     return GestureDetector(
-      onTap: () {
+      onTap: isEnabled ? () {
         setState(() {
           _selectedCategory = category;
         });
-      },
+      } : null,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.blueAccent : Colors.grey[200],
+          color: _selectedCategory == category
+              ? Colors.blueAccent
+              : Colors.grey[300],
           borderRadius: BorderRadius.circular(12.0),
         ),
         child: Text(
           category,
           style: TextStyle(
+            color: _selectedCategory == category ? Colors.white : Colors.black,
             fontSize: 16.0,
             fontWeight: FontWeight.bold,
-            color: isSelected ? Colors.white : Colors.black,
           ),
         ),
       ),
