@@ -42,12 +42,10 @@ User-Friendly Interface
 ## Features Summary
 Income Management: Register, manage, and view income entries.
 Expense Management: Record, manage, and view expenses.
-Budget Cycle Management: Automatic monthly budget cycles with past cycle view options.
 Balance Calculation: Real-time balance updates, including cycle-specific balances.
 Currency Conversion: Convert balances into multiple currencies with real-time exchange rates.
 Local Storage: Secure, persistent storage of financial data.
 State Management: Efficient and scalable state management for performance and reliability.
-Responsive Design: Optimized for both mobile and desktop experiences.
 User-Friendly Interface: Easy-to-use interface with visual insights and intuitive navigation.
 This application provides users with a powerful tool to track, manage, and analyze their financial activities, helping them gain insights and control over their personal finances.
 
