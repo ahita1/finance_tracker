@@ -21,7 +21,7 @@ The app automatically creates a new budget cycle at the start of each month, ens
 ### Real-Time Balance: 
 The app computes the balance as the difference between total income and total expenses. The balance can be positive or negative, providing a clear picture of the user's financial standing.
 ### Cycle-Specific Balance: 
-Balances are calculated for each budget cycle, allowing users to see how their finances change over time.
+Balances are calculated for each budget cycle, allowing users to see how their finances change over time.They can see their previous budget cycles as well
 Currency Conversion
 ### Multi-Currency Support: 
 Converts the user's balance into multiple other currencies using public APIs. This feature provides a broader financial perspective for users who deal with multiple currencies.
