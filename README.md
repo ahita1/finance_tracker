@@ -1,5 +1,5 @@
 # Finance Tracker for Horra Trading
-Finance Tracker for Horra Trading is a comprehensive mobile application developed using Flutter. The app is designed to help users efficiently manage their finances by tracking income, expenses, and calculating their balance. It also includes advanced features such as budget cycle management and currency conversion to offer users a complete financial management tool.
+Finance Tracker for Horra Trading is a comprehensive mobile application which i developed using Flutter. The app is designed to help users efficiently manage their finances by tracking income, expenses, and calculating their balance. It also includes advanced features such as budget cycle management and currency conversion to offer users a complete financial management tool.
 
 ## Project Description
 The Finance Tracker app provides the following key features:
