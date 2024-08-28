@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
             titleTextStyle: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontFamily: 'Roboto', // Apply the Google Font here
+              fontFamily: 'Roboto',
             ),
             iconTheme: IconThemeData(
               color: Colors.white,
@@ -47,18 +47,17 @@ class MyApp extends StatelessWidget {
           ),
           textTheme: TextTheme(
             bodyLarge: TextStyle(
-              fontFamily: 'Roboto', // Apply the Google Font to bodyText1
+              fontFamily: 'Roboto', 
             ),
             bodyMedium: TextStyle(
-              fontFamily: 'Roboto', // Apply the Google Font to bodyText2
+              fontFamily: 'Roboto', 
             ),
             displayLarge: TextStyle(
-              fontFamily: 'Roboto', // Apply the Google Font to headline1
+              fontFamily: 'Roboto', 
             ),
             displayMedium: TextStyle(
-              fontFamily: 'Roboto', // Apply the Google Font to headline2
+              fontFamily: 'Roboto', 
             ),
-            // Add other text styles as needed
           ),
         ),
         debugShowCheckedModeBanner: false,

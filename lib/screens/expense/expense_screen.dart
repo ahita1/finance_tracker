@@ -60,7 +60,6 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         _showSuccessMessage = true;
       });
 
-      // Clear the form fields
       _titleController.clear();
       _amountController.clear();
       setState(() {

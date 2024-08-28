@@ -80,7 +80,8 @@ class _HomePageState extends State<IntoScreen> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(top: 10, bottom: 10),
+                              padding:
+                                  const EdgeInsets.only(top: 10, bottom: 10),
                               child: animationDo(
                                 index,
                                 100,
@@ -97,11 +98,11 @@ class _HomePageState extends State<IntoScreen> {
                       Align(
                         alignment: Alignment.topRight,
                         child: Padding(
-                          padding: const EdgeInsets.all(16.0), // Adjust the padding as needed
+                          padding: const EdgeInsets.all(16.0),
                           child: Image.asset(
                             'assets/logo_0.png',
-                            width: 100, // Increase the width as needed
-                            height: 100, // Increase the height as needed
+                            width: 100,
+                            height: 100,
                           ),
                         ),
                       ),

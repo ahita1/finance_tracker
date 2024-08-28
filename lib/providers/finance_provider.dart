@@ -7,7 +7,7 @@ class FinanceProvider with ChangeNotifier {
   double _totalExpenses = 0.0;
   List<Map<String, dynamic>> _incomes = [];
   List<Map<String, dynamic>> _expenses = [];
-  String _currentCycle = _getCurrentBudgetCycle(); // Current budget cycle
+  String _currentCycle = _getCurrentBudgetCycle(); 
 
   final CurrencyService _currencyService = CurrencyService();
 
@@ -32,7 +32,7 @@ class FinanceProvider with ChangeNotifier {
         'incomes',
         where: 'budget_cycle = ?',
         whereArgs: [_currentCycle],
-        orderBy: 'date DESC', // Order by date in descending order
+        orderBy: 'date DESC', 
         limit: limit,
         offset: offset,
       );
@@ -57,7 +57,7 @@ class FinanceProvider with ChangeNotifier {
         'expenses',
         where: 'budget_cycle = ?',
         whereArgs: [_currentCycle],
-        orderBy: 'date DESC', // Order by date in descending order
+        orderBy: 'date DESC', 
         limit: limit,
         offset: offset,
       );
@@ -85,7 +85,7 @@ class FinanceProvider with ChangeNotifier {
       'category': category,
       'budget_cycle': _currentCycle,
     });
-    await fetchIncomes(); // Re-fetch incomes after adding a new one
+    await fetchIncomes(); 
   }
 
   Future<void> addExpense(String title, double amount, DateTime date) async {
@@ -96,11 +96,11 @@ class FinanceProvider with ChangeNotifier {
       'date': date.toIso8601String(),
       'budget_cycle': _currentCycle,
     });
-    await fetchExpenses(); // Re-fetch expenses after adding a new one
+    await fetchExpenses(); 
   }
 
   Future<void> startNewBudgetCycle() async {
-    _currentCycle = _getCurrentBudgetCycle(); // Update the current budget cycle
+    _currentCycle = _getCurrentBudgetCycle();
     await fetchIncomes();
     await fetchExpenses();
   }

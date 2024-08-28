@@ -38,8 +38,6 @@ The app employs a scalable and efficient state management solution, ensuring smo
 ### Real-Time Updates: 
 The app instantly reflects any changes to income, expenses, or balance without requiring manual refreshes.
 User-Friendly Interface
-### Responsive Design: 
-The app is optimized for both mobile devices and desktops, offering a consistent and intuitive user experience across different screen sizes.
 
 ## Features Summary
 Income Management: Register, manage, and view income entries.

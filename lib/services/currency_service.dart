@@ -7,7 +7,6 @@ class CurrencyService {
 
   Future<Map<String, double>> fetchConversionRates() async {
     final url = '${_baseUrl}$_apiKey/latest/ETB'; 
-
     try {
       final response = await http.get(Uri.parse(url));
 
@@ -18,15 +17,12 @@ class CurrencyService {
           final conversionRates = data['conversion_rates'] as Map<String, dynamic>;
           return conversionRates.map((key, value) => MapEntry(key, value.toDouble()));
         } else {
-          // Handle case where API returns an error response
           throw Exception('Error from API: ${data['error-type']}');
         }
       } else {
-        // Handle case where response status code is not 200
         throw Exception('Failed to load currency conversion rates. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      // Handle any other exceptions, like network issues
       print('Exception caught: $e');
       throw Exception('Failed to fetch conversion rates: $e');
     }
