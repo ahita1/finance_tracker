@@ -4,11 +4,11 @@ Finance Tracker for Horra Trading is a comprehensive mobile application develope
 ## Project Description
 The Finance Tracker app provides the following key features:
 
-### Income Registration
+## Income Registration
 Add Income: Users can easily add and persist their income entries with details like title, amount, date, and category.
 ### Income List: 
 A detailed list of all recorded incomes, categorized by budget cycles.
-### Expense Registration
+## Expense Registration
 ### Add Expense: 
 Enables users to record and save their expenses, including details like title, amount, date, and category.
 ### Expense List: 
