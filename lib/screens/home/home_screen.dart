@@ -4,7 +4,6 @@ import '../../providers/finance_provider.dart';
 import 'bottom_bar.dart';
 import '../income/income_screen.dart';
 import '../expense/expense_screen.dart';
-import 'package:intl/intl.dart';
 
 void main() {
   runApp(
